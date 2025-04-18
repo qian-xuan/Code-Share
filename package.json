@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "build": "npm run build --prefix client",
+    "start": "npm run build && npm start --prefix server",
+    "dev": "concurrently \"npm run dev --prefix client\" \"npm start --prefix server\""
+  },
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

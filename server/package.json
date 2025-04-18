@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "nodemon app.js"
+  },
+  "dependencies": {
+    "@koa/router": "^13.1.0",
+    "koa": "^2.16.1",
+    "koa-static": "^5.0.0"
+  }
+}
