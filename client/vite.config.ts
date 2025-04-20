@@ -7,18 +7,23 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
+    hmr: true,
     proxy: {
       '/api': {
         target: 'http://localhost:3001',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }
+    },
+    watch: {
+      usePolling: true,
     }
   },
 
   // build 配置
   build: {
     outDir: '../server/dist',
+    emptyOutDir: true,
     manifest: true,
     rollupOptions: {
       input: 'index.html'
