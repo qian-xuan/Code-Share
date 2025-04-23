@@ -1,15 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import AppleDots from "./AppleDots";
-import CodePageRadio from "./CodePageRadio";
-import { Editor } from '@monaco-editor/react';
+import CodePageRadio from "../CodePageRadio";
 import { Dropdown, MenuProps, Space } from "antd";
 import { DownOutlined } from "@ant-design/icons";
+import CodeEditor from "../CodeEditor";
+import { CodeDataContext } from "../../contexts/CodeDataContext";
 
-interface EditCodeBoxProps {
-  FCName: string;
-  code?: string | "";
-  language?: string;
-}
 
 const items: MenuProps['items'] = [
   {
@@ -27,7 +23,8 @@ const items: MenuProps['items'] = [
   }
 ];
 
-const EditCodeBox: React.FC<EditCodeBoxProps> = ({ FCName, code, language = "javascript"}) => {
+const EditCodeBox: React.FC = () => {
+  const [codeData] = useContext(CodeDataContext);
 
   return (
     <div className="flex-row bg-AC-0 rounded-t-xl p-4 box-border">
@@ -37,17 +34,15 @@ const EditCodeBox: React.FC<EditCodeBoxProps> = ({ FCName, code, language = "jav
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-2 pb-4">
           <AppleDots />
-          <label className="text-text font-bold">{FCName}</label>
+          <label className="text-text font-bold">{codeData.setting.title || "代码片段"}</label>
         </div>
       </div>
 
 
       {/* 代码页选项 Radio & language 选项 */}
-      <div className="flex justify-between items-center">
+      <CodePageRadio>
 
-        {/* <div className="bg-blue-600 h-5"></div> */}
-        <CodePageRadio />
-
+        {/* children */}
         <div className="box-border bg-AC-0 w-32">
         <Dropdown menu={{ items }} className="text-text text-[10px]">
           <Space>
@@ -56,26 +51,12 @@ const EditCodeBox: React.FC<EditCodeBoxProps> = ({ FCName, code, language = "jav
           </Space>
         </Dropdown>
         </div>
-      </div>
+
+      </CodePageRadio>
 
 
       {/* 代码编辑器 */}
-      <Editor
-      defaultLanguage="html"
-      language="html"
-      theme="vs-dark"  // 主题：vs, vs-dark, hc-black
-      defaultValue="// 输入代码..."
-      options={{
-        minimap: { enabled: false },  // 禁用小地图
-        mouseWheelZoom: true,         // 滚轮缩放
-        readOnly: false,
-        folding: true,
-        smoothScrolling: true,
-        scrollbar: {vertical: "hidden"},
-      }}
-      className="h-80"
-      />
-
+      <CodeEditor />
 
     </div>
   );

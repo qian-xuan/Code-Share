@@ -15,7 +15,7 @@ const staticPath = path.join(__dirname, '/dist')
 app.use(serve(staticPath))
 
 // get
-router.get('/', (ctx) => {
+router.get('/codes', (ctx) => {
   ctx.body = 'Hello World!'
 })
 

@@ -1,29 +1,14 @@
-import HeaderMenu from './components/HeaderMenu'
 import './App.css'
-import CodeListPage from './pages/CodeListPage'
+import { useState } from 'react'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import HeaderMenu from './components/HeaderMenu'
 import CreateCodePage from './pages/CreateCodePage'
-import { useMemo, useState } from 'react'
+import CodeListPage from './pages/CodeListPage'
 import CardSharePage from './pages/CardSharePage'
 
+// const MemoizedCreateCodePage = React.memo(CreateCodePage);
 
 function App() {
-  // 使用字符串存储当前页面标识符
-  const [currentPage, setCurrentPage] = useState('create');
-
-  // 根据当前页面标识符动态渲染组件
-  // const renderPage = () => {
-  //   if (currentPage === 'codeList') return <CodeListPage />;
-  //   if (currentPage === 'cardShare') return <CardSharePage />;
-  //   return <CreateCodePage />; // 默认返回创建页面
-  // };
-  
-  const memoizedPage = useMemo(() => {
-    if (currentPage === 'codeList') return <CodeListPage />;
-    if (currentPage === 'cardShare') return <CardSharePage />;
-    return <CreateCodePage />; // 默认返回创建页面
-  }, [currentPage]);
-
-
   const [theme, setTheme] = useState("dark");
 
   const toggleTheme = () => {
@@ -33,14 +18,19 @@ function App() {
   };
 
   return (
-    <div className="justify-items-center">
-      {/* 将 setCurrentPage 传递给 HeaderMenu */}
-      <HeaderMenu selectPage={setCurrentPage} />
+    <div id="app" className="justify-items-center text-text">
+      {/* 顶部菜单 */}
+      <HeaderMenu />
 
       {/* 动态渲染 Page 组件 */}
       <div id="pageBody" className="w-9/12 pt-5">
-        {/* {renderPage()} */}
-        {memoizedPage}
+        <Routes>
+          <Route path="/" element={<Navigate to ="/codes" />} />
+          {/* <Route path="/create" element={<MemoizedCreateCodePage />} /> */}
+          <Route path="/create" element={<CreateCodePage key="create" />} />
+          <Route path="/codes" element={<CodeListPage />} />
+          <Route path="/share" element={<CardSharePage />} />
+        </Routes>
       </div>
 
       {/* 主题切换按钮 */}

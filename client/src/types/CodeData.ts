@@ -1,7 +1,10 @@
 export class CodeData {
-  codes: { page: number; code: string }[];
+  codes: {
+    type: string;
+    code: string | undefined;
+  }[];
   setting: {
-    title: string;
+    title: string | undefined;
     tags: string[];
     overtime: number;
     description: string;
@@ -18,12 +21,7 @@ export class CodeData {
   }
 
   // 示例方法：添加代码
-  addCode(page: number, code: string) {
-    this.codes.push({ page, code });
-  }
+  // addCode(code: string, type: string) {
+  //   this.codes.push({ code, type });
+  // }
 }
-
-// TODO
-// 1. 改用fetch请求
-// 2. 修改接口，使用CodeData类
-// 3. 添加代码页

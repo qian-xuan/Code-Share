@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu, ConfigProvider} from 'antd';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -23,27 +24,32 @@ const items: MenuItem[] = [
   },
   {
     label: '代码列表',
-    key: 'codeList',
+    key: 'codes',
   },
   {
     label: '卡片分享',
-    key: 'cardShare',
+    key: 'share',
     // disabled: true,
   },
 ];
 
-interface HeaderMenuProps {
-  selectPage: (page: string) => void;
-}
 
-const HeaderMenu: React.FC<HeaderMenuProps> = ({ selectPage }) => {
-  const [selected, setSelected] = useState('create');
+const HeaderMenu: React.FC = () => {
+  const location = useLocation(); // 获取当前路由
+  const navigate = useNavigate(); // 用于导航
+  const [selected, setSelected] = useState('codeList');
 
+  // 根据当前路由更新选中项
+  useEffect(() => {
+    const path = location.pathname.replace('/', '');
+    setSelected(path || 'codeList'); // 如果路径为空，默认选中 "create"
+  }, [location]);
+
+  // 点击菜单项时导航到对应路由
   const onClick: MenuProps['onClick'] = (e) => {
     // console.log('click ', e);
     setSelected(e.key);
-    // console.log(selectPage)
-    selectPage(e.key)
+    navigate(`/${e.key}`); // 跳转到对应路由
   };
 
   return (
