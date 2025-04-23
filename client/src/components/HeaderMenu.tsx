@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Menu, ConfigProvider} from 'antd';
-import { PAGE_PRIMARY } from '../config/constants';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -29,6 +28,7 @@ const items: MenuItem[] = [
   {
     label: '卡片分享',
     key: 'cardShare',
+    // disabled: true,
   },
 ];
 
@@ -51,19 +51,19 @@ const HeaderMenu: React.FC<HeaderMenuProps> = ({ selectPage }) => {
       theme={{
         components: {
           Menu: {
-            horizontalItemSelectedColor: PAGE_PRIMARY,
+            horizontalItemSelectedColor: 'var(--color-accent)',
             horizontalLineHeight: '60px',
-            itemColor: '#F5F5F5',
-            itemDisabledColor: '#F5F5F5',
+            itemColor: 'var(--color-menuText)',
+            itemDisabledColor: 'var(--color-menuText)',
             // ↓ Ali! Looking my eyes!(╯▔皿▔)╯
-            // horizontalItemHoverColor: '#F5F5F5',
-            itemHoverColor: '#F5F5F5',
+            // horizontalItemHoverColor: 'var(--color-menuText)',
+            itemHoverColor: 'var(--color-menuText)',
           },
         },
       }}
     >
       <Menu onClick={onClick} selectedKeys={[selected]} mode="horizontal" items={items} 
-      className='bg-gray-900 rounded-full font-bold w-10/12 ring-2 ring-transparent ring-offset-2 ring-offset-gray-800'/>
+      className="bg-AC-3 rounded-full font-bold w-10/12 ring-2 ring-transparent ring-offset-2 ring-offset-border"/>
 
       {/* Menu Border Blur
       <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} 
