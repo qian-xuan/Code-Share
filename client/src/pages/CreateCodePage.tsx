@@ -4,7 +4,7 @@ import { Input } from 'antd';
 import { CodeDataContext } from '../contexts/CodeDataContext';
 
 const CreateCodePage: React.FC = () => {
-  const [codeData, setCodeData] = useContext(CodeDataContext);
+  const codeData = useContext(CodeDataContext);
   
   return (
     <div className='flex-row space-y-4'>
@@ -20,7 +20,7 @@ const CreateCodePage: React.FC = () => {
       <Input
         // className='bg-AC-0 text-textAccent'
         placeholder='请输入代码片段标题'
-        onChange={(e) => setCodeData({...codeData, setting: {...codeData.setting, title: e.target.value}})}
+        onChange={(e) => codeData.setting.title = e.target.value}
         />
     </div>
   );

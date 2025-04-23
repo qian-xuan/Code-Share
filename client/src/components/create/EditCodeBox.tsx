@@ -24,7 +24,7 @@ const items: MenuProps['items'] = [
 ];
 
 const EditCodeBox: React.FC = () => {
-  const [codeData] = useContext(CodeDataContext);
+  const codeData = useContext(CodeDataContext);
 
   return (
     <div className="flex-row bg-AC-0 rounded-t-xl p-4 box-border">
@@ -34,7 +34,7 @@ const EditCodeBox: React.FC = () => {
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-2 pb-4">
           <AppleDots />
-          <label className="text-text font-bold">{codeData.setting.title || "代码片段"}</label>
+          <label className="text-text font-bold">{codeData.setting.title}</label>
         </div>
       </div>
 
