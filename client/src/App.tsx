@@ -2,7 +2,7 @@ import './App.css'
 import { useState } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import HeaderMenu from './components/HeaderMenu'
-import CreateCodePage from './pages/CreateCodePage'
+import EditCodePage from './pages/EditCodePage'
 import CodeListPage from './pages/CodeListPage'
 import CardSharePage from './pages/CardSharePage'
 
@@ -18,7 +18,7 @@ function App() {
   };
 
   return (
-    <div id="app" className="justify-items-center text-text">
+    <div id="app" className="justify-items-center text-text pt-[2rem]">
       {/* 顶部菜单 */}
       <HeaderMenu />
 
@@ -27,7 +27,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to ="/codes" />} />
           {/* <Route path="/create" element={<MemoizedCreateCodePage />} /> */}
-          <Route path="/create" element={<CreateCodePage key="create" />} />
+          <Route path="/create" element={<EditCodePage key="create" />} />
           <Route path="/codes" element={<CodeListPage />} />
           <Route path="/share" element={<CardSharePage />} />
         </Routes>

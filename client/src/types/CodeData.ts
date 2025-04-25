@@ -1,9 +1,9 @@
 export class CodeData {
   codes: {
-    type: string;
+    language: string;
     code: string | undefined;
   }[];
-  setting: {
+  settings: {
     title: string | undefined;
     tags: string[];
     overtime: number;
@@ -12,7 +12,7 @@ export class CodeData {
 
   constructor() {
     this.codes = [];
-    this.setting = {
+    this.settings = {
       title: "",
       tags: [],
       overtime: 0,

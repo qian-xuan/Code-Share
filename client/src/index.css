@@ -20,8 +20,16 @@
 }
 
 [themeMode="light"] {
-  --color-primary: #FFFFFF;
-  --color-secondary: #F3F4F6;
+  --color-testMark: #EE6B6B;
+  --color-pageBg: #F3F4F6;
   --color-accent: #3B82F6;
-  --color-border: #D1D5DB;
+  --color-text: #000000;
+  --color-text-accent: #000000;
+  --color-menuText: #000000;
+  --color-border: #a98467;
+  --color-AC-0: #edede9;
+  --color-AC-1: #d6ccc2;
+  --color-AC-2: #d5bdaf;
+  --color-AC-3: #e3d5ca;
+  --color-AC-4: #f5ebe0;
 }
