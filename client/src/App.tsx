@@ -5,6 +5,8 @@ import HeaderMenu from './components/HeaderMenu'
 import EditCodePage from './pages/EditCodePage'
 import CodeListPage from './pages/CodeListPage'
 import CardSharePage from './pages/CardSharePage'
+import { Button } from 'antd'
+import { SunOutlined } from '@ant-design/icons'
 
 // const MemoizedCreateCodePage = React.memo(CreateCodePage);
 
@@ -34,14 +36,10 @@ function App() {
       </div>
 
       {/* 主题切换按钮 */}
-      <div>
-        <button
-          onClick={toggleTheme}
-          className="p-2 bg-accent text-textAccent rounded"
-        >
-          切换主题
-        </button>
-      </div>
+      <Button size='large' shape='circle' icon={<SunOutlined />} onClick={toggleTheme} 
+      className='fixed bottom-5 right-5'/>
+
+      {/* className="p-2 bg-accent text-textAccent rounded fixed bottom-20  right-5" */}
     
     </div>
   );

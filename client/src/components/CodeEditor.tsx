@@ -11,6 +11,7 @@ const CodeEditor: React.FC<{ language: string, page: number, readOnly: boolean }
     theme="vs-dark"  // 主题：vs, vs-dark, hc-black
     language={language}
     defaultValue={codes[page].code}
+    value="Test"
     onChange={(value) => {codes[page].code = value}}
     options={{
       minimap: { enabled: false },  // 禁用小地图
