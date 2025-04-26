@@ -1,30 +1,9 @@
-import React, { Children, useContext, useMemo, useRef, useState } from 'react';
-import { DownOutlined } from "@ant-design/icons";
-import { ConfigProvider, Dropdown, Space, Tabs } from 'antd';
+import React, { useContext, useMemo, useState } from 'react';
+import { ConfigProvider, Tabs } from 'antd';
 import CodeEditor from '../CodeEditor';
 import { CodeDataContext } from '../../contexts/CodeDataContext';
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
-
-// const items: MenuProps['items'] = [
-//   {
-//     key: "jacascript",
-//     label: "jacascript",
-//   },
-//   {
-//     key: "cpp",
-//     label: "cpp"
-//   }
-// ];
-
-// const operations = (<div className="box-border bg-AC-0 w-32 rounded-sm text-text text-[10px] p-[1px]">
-//         <Dropdown menu={{ items }} placement="bottom" arrow className="flex justify-between pl-2 pr-2">
-//             <Space>
-//             编辑器主题色
-//             <DownOutlined/>
-//             </Space>
-//           </Dropdown>
-//         </div>);
 
 const operations = <label>Test</label>
 
@@ -38,17 +17,17 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
   const codes = useContext(CodeDataContext).codes;
   const [activeKey, setActiveKey] = useState("0");
   const [page, setPage] = useState(0);
-  const editor = useMemo(() => <CodeEditor language='html' page={page} readOnly={false} />, []);
-  // const editor = <CodeEditor language='html' page={page} readOnly={false} />;
+  const sharedEditor = useMemo(() => <CodeEditor language='html' page={page} readOnly={false} key={'sharedEditor'}/>, [page]);
+  // const sharedEditor = <CodeEditor language='html' page={page} readOnly={false} key={'sharedEditor'} />;
   
   // 初始化页面数
   const items: TabItem[] = [];
   if (codes.length === 0) {
-    items.push({ label: "代码 1", children: editor, key: "0" });
+    items.push({ label: "代码 1", children: sharedEditor, key: "0" });
     codes.push({ language: "html", code: "// 输入代码..." });
   } else {
     codes.forEach(({}, index) =>{
-      items.push({ label: `代码 ${index + 1}`, children: editor, key: index.toString() });
+      items.push({ label: `代码 ${index + 1}`, children: sharedEditor, key: index.toString() });
     })
   }
 
@@ -64,14 +43,13 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
   const add = () => {
     const newPage = codes.length;
     const newPanes = [...tabItems];
-    newPanes.push({ label: `代码${newPage+1}`, children: editor, key: newPage.toString() });
+    newPanes.push({ label: `代码${newPage+1}`, children: sharedEditor, key: newPage.toString() });
     codes.push({ language: "html", code: "// 输入代码..." });
     setTabItems(newPanes);
     setActiveKey(newPage.toString());
     setPage(newPage);
   };
 
-  // TODO
   // 删除 Page
   const remove = (targetKey: TargetKey) => {
     let activePage = Number(activeKey);
@@ -84,15 +62,15 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
       // console.log(tabItems.slice(removePage + 1, ))
       tabItems.slice(removePage + 1, ).forEach((item: TabItem) => {
         const itemPage = Number(item.key);
-        newPanes.push({ label: `代码${itemPage}`, children: editor, key: (itemPage-1).toString() });
+        newPanes.push({ label: `代码${itemPage}`, children: sharedEditor, key: (itemPage-1).toString() });
       });
     }
     codes.splice(removePage, 1);
 
     // console.log(removePage);
     // console.log(tabItems)
-    console.log(newPanes)
-    console.log(codes)
+    // console.log(newPanes)
+    // console.log(codes)
     
     setTabItems(newPanes);
     if (activePage >= removePage) {
@@ -152,6 +130,8 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
       onEdit={onEdit}
       items={tabItems}
       />
+      {/* <button onClick={() => {console.log(page) }}
+      className="p-2 bg-accent text-textAccent rounded fixed bottom-20  right-5">Test</button> */}
     </ConfigProvider>
 
   )
