@@ -1,5 +1,4 @@
 import './App.css'
-import { useState } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import HeaderMenu from './components/HeaderMenu'
 import EditCodePage from './pages/EditCodePage'
@@ -9,14 +8,15 @@ import { Button } from 'antd'
 import { SunOutlined } from '@ant-design/icons'
 
 // const MemoizedCreateCodePage = React.memo(CreateCodePage);
+type Theme = 'light' | 'dark';
 
 function App() {
-  const [theme, setTheme] = useState("dark");
-
+  // const [theme, setTheme] = useState("dark");
+  let theme:Theme = 'dark';
+  
   const toggleTheme = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
-    document.documentElement.setAttribute("themeMode", newTheme);
+    theme = theme === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("themeMode", theme);
   };
 
   return (

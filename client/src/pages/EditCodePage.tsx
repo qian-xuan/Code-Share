@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import EditCodeBox from '../components/create/EditCodeBox';
 import { CodeDataContext } from '../contexts/CodeDataContext';
 import { CodeData } from '../types/CodeData';
@@ -6,7 +6,7 @@ import CodeSettingBox from '../components/create/CodeSettingBox';
 import { Collapse, ConfigProvider } from 'antd';
 
 const EditCodePage: React.FC = () => {
-  const ceateCodeCache = new CodeData();
+  const ceateCodeCache = useMemo(() => new CodeData(), []);
   const [fcName, setFcName] = useState("");
   
   return (
@@ -37,7 +37,7 @@ const EditCodePage: React.FC = () => {
               key: "1",
               label: "更多设置",
               children: <CodeSettingBox setFcName={setFcName} />,
-              headerClass: "items-strt",
+              // headerClass: "items-start",
             }] }
            />
 
