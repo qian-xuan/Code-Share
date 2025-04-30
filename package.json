@@ -5,6 +5,7 @@
     "dev": "concurrently \"npm run dev --prefix client\" \"npm start --prefix server\""
   },
   "dependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.1.2",
+    "runes2": "^1.1.4"
   }
 }

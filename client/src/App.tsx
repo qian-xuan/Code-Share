@@ -20,7 +20,7 @@ function App() {
   };
 
   return (
-    <div id="app" className="justify-items-center text-text pt-[2rem]">
+    <div id="app" className="justify-items-center text-text pt-[2rem] pb-[2rem]">
       {/* 顶部菜单 */}
       <HeaderMenu />
 

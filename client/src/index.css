@@ -10,6 +10,7 @@
   --color-accent: #E3FA43;
   --color-text: #F5F5F5;
   --color-text-accent: #000000;
+  --color-text-disabled: #4B5563;
   --color-menuText: #F5F5F5;
   --color-border: #4B5563;
   --color-AC-0: #000000;
@@ -22,9 +23,10 @@
 [themeMode="light"] {
   --color-testMark: #EE6B6B;
   --color-pageBg: #F3F4F6;
-  --color-accent: #3B82F6;
+  --color-accent: #adc178;
   --color-text: #000000;
   --color-text-accent: #000000;
+  --color-text-disabled: #4B5563;
   --color-menuText: #000000;
   --color-border: #a98467;
   --color-AC-0: #edede9;

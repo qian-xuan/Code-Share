@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { ConfigProvider, Select, Tabs } from 'antd';
+import { ConfigProvider, Select, Tabs, ThemeConfig } from 'antd';
 import CodeEditor from '../CodeEditor';
 import { CodeDataContext } from '../../contexts/CodeDataContext';
 
@@ -7,7 +7,7 @@ type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 
 // Tabs 样式
 // 想哭的我带上痛苦面具
-const theme = {
+const theme:ThemeConfig = {
   components: {
     Tabs: {
       horizontalMargin: '0 0 0 0',
@@ -145,6 +145,8 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
     setCurrentLanguage(newLanguage);
   }
 
+  // TODO: 修整样式
+  // Tabs 边栏 Select
   const operations = (
     <Select
     defaultValue="html"
@@ -183,8 +185,8 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
       forceUpdate={forceUpdate}
       />
 
-      <button onClick={() => { console.log(activeKey) }}
-className="p-2 bg-accent text-textAccent rounded fixed bottom-20  right-5">Test</button>
+<button onClick={() => console.log(codes)}
+className="p-2 bg-accent text-textAccent rounded fixed bottom-80  right-5">Test</button>
 
     </>
   )

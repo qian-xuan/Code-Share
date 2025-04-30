@@ -6,7 +6,7 @@ export class CodeData {
   settings: {
     title: string | undefined;
     tags: string[];
-    overtime: number;
+    overtime: string | undefined;
     description: string;
   };
 
@@ -15,7 +15,7 @@ export class CodeData {
     this.settings = {
       title: "",
       tags: [],
-      overtime: 0,
+      overtime: undefined,
       description: "",
     };
   }

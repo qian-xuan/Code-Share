@@ -14,6 +14,7 @@ export default {
         accent: 'var(--color-accent)',           // 强调色
         text: 'var(--color-text)',               // 文字颜色
         textAccent: 'var(--color-text-accent)',  // 强调文字颜色
+        textDisabled: 'var(--color-text-disabled)',  // 禁用文字颜色
         menuText: 'var(--color-menuText)',       // 菜单文字颜色
         border: 'var(--color-border)',           // 边框颜色
         // Area Colors
