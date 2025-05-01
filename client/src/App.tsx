@@ -15,9 +15,10 @@ function App() {
   let theme:Theme = 'dark';
   
   const toggleTheme = () => {
-    theme = theme === "dark" ? "light" : "dark";
-    document.documentElement.setAttribute("themeMode", theme);
-    console.log(document.documentElement.getAttribute("--color-accent"));
+    // theme = theme === "dark" ? "light" : "dark";
+    // document.documentElement.setAttribute("themeMode", theme);
+    document.documentElement.style.setProperty('--color-accent', '#FFFFFF');
+    console.log(getComputedStyle(document.documentElement).getPropertyValue('--color-accent').trim());
   };
 
   return (

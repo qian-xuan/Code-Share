@@ -8,7 +8,7 @@ export type ThemeMode = 'light' | 'dark';
 // 定义各主题色色值
 const themeColors: Record<ThemeMode, ThemeConfig['token']> = {
   light: {
-    colorPrimary: 'var(--color-accent)',
+    colorPrimary: '#E3FA43',
   },
   dark: {
     
@@ -32,7 +32,7 @@ export interface GlobalThemeContextProps {
 // 设置全局 css 变量，tailwind config 对其引用，实现 tailwind 自定义颜色变量与 antd 协同使用
 const setGlobalColorCSS = (t: ThemeMode) => {
   // Test sample
-  document.documentElement.setAttribute('--color-accent', themeColors[t]!.colorPrimary!);
+  document.documentElement.style.setProperty('--color-accent', themeColors[t]!.colorPrimary!);
 }
 
 export const GlobalThemeContext = createContext<GlobalThemeContextProps | undefined>(undefined);

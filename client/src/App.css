@@ -5,28 +5,6 @@
 #root {
   /* theme 主题色 */
   /* tailwind.config.js 中的 colors 引用 */
-  /* --color-testMark: #EE6B6B;
-  --color-pageBg: #0C0C0C;
-  --color-accent: #E3FA43;
-  --color-text: #F5F5F5;
-  --color-text-accent: #000000;
-  --color-text-disabled: #4B5563;
-  --color-menuText: #F5F5F5;
-  --color-border: #4B5563;
-  --color-AC-0: #000000;
-  --color-AC-1: #141414;
-  --color-AC-2: #161616;
-  --color-AC-3: #171717;
-  --color-AC-4: #232323; */
-}
-
-.box-border {
-  @apply border-[1px] border-border;
-}
-
-[themeMode="dark"] {
-  /* theme 主题色 */
-  /* tailwind.config.js 中的 colors 引用 */
   --color-testMark: #EE6B6B;
   --color-pageBg: #0C0C0C;
   --color-accent: #E3FA43;
@@ -42,7 +20,29 @@
   --color-AC-4: #232323;
 }
 
-[themeMode="light"] {
+.box-border {
+  @apply border-[1px] border-border;
+}
+
+[themeMode="dark"] {
+  /* theme 主题色 */
+  /* tailwind.config.js 中的 colors 引用 */
+  /* --color-testMark: #EE6B6B;
+  --color-pageBg: #0C0C0C;
+  --color-accent: #E3FA43;
+  --color-text: #F5F5F5;
+  --color-text-accent: #000000;
+  --color-text-disabled: #4B5563;
+  --color-menuText: #F5F5F5;
+  --color-border: #4B5563;
+  --color-AC-0: #000000;
+  --color-AC-1: #141414;
+  --color-AC-2: #161616;
+  --color-AC-3: #171717;
+  --color-AC-4: #232323; */
+}
+
+/* [themeMode="light"] {
   --color-testMark: #EE6B6B;
   --color-pageBg: #F3F4F6;
   --color-accent: #adc178;
@@ -56,7 +56,7 @@
   --color-AC-2: #d5bdaf;
   --color-AC-3: #e3d5ca;
   --color-AC-4: #f5ebe0;
-}
+} */
 
 
 
