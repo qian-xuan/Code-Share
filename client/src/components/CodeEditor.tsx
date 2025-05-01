@@ -63,7 +63,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language = 'html', page, readOn
   }
 
   return (
-    <>
     <Editor
     // defaultLanguage="html"
     theme="vs-dark"  // 主题：vs, vs-dark, hc-black
@@ -81,9 +80,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language = 'html', page, readOn
     }}
     className="h-96"
     />
-    {/* <button onClick={() => {console.log(language) }}
-      className="p-2 bg-accent text-textAccent rounded fixed bottom-20  right-5">Test</button> */}
-    </>
   )
 };
 

@@ -1,30 +1,38 @@
 import { ConfigProvider, ThemeConfig } from "antd";
-import { createContext, useState } from "react";
+import { createContext, ReactNode, useMemo, useState } from "react";
 
 
 // 定义主题色类型
 export type ThemeMode = 'light' | 'dark';
+const defaultThemeMode:ThemeMode = 'light';
 
 // 定义各主题色色值
 const themeColors: Record<ThemeMode, ThemeConfig['token']> = {
   light: {
-    colorPrimary: '#E3FA43',
+    colorBgBase: '#f4acb7',
+    colorPrimary: '#9d0208',
+    colorTextBase: '#000000',
   },
   dark: {
-    
+    colorBgBase: '#6c757d',
+    colorPrimary: '#E3FA43',
+    colorTextBase: '#F5F5F5',
   },
 };
 
-// antd config 默认主题色
+// antd config 默认主题, 包括颜色和其余配置
 const defaultTheme:ThemeConfig = {
   token: {
-    ...themeColors.light
+    ...themeColors[defaultThemeMode],
+    borderRadius: 3,
+    lineWidth: 2,
   },
 }
+document.documentElement.style.setProperty('--width-line', defaultTheme.token!.lineWidth!.toString());
 
 // themeContext 属性接口
 export interface GlobalThemeContextProps {
-  getThemeMode: ThemeMode,
+  themeMode: ThemeMode,
   setThemeMode: (newTheme: ThemeMode) => any,
   themeConfig?: ThemeConfig,
 }
@@ -32,25 +40,40 @@ export interface GlobalThemeContextProps {
 // 设置全局 css 变量，tailwind config 对其引用，实现 tailwind 自定义颜色变量与 antd 协同使用
 const setGlobalColorCSS = (t: ThemeMode) => {
   // Test sample
-  document.documentElement.style.setProperty('--color-accent', themeColors[t]!.colorPrimary!);
+  document.documentElement.style.setProperty('--color-bgBase', themeColors[t]!.colorBgBase!);
+  document.documentElement.style.setProperty('--color-primary', themeColors[t]!.colorPrimary!);
+  document.documentElement.style.setProperty('--color-text', themeColors[t]!.colorTextBase!);
 }
+// 初始化变量
+setGlobalColorCSS(defaultThemeMode);
 
+// 全局主题 Context
 export const GlobalThemeContext = createContext<GlobalThemeContextProps | undefined>(undefined);
 
-// !忽略这个 any , 先这样之后会改
-export const GlobalThemeProvider: (props: any) => any = ({ children }) => {
-  const [globalThemeMode, setGlobalThemeMode] = useState<ThemeMode>('light');
-  const [globalThemeConfig, setGlobalThemeConfig] = useState<ThemeConfig>(defaultTheme);
+export const GlobalThemeProvider: (props: { children: ReactNode }) => ReactNode = ({ children }) => {
+  const [globalThemeMode, setGlobalThemeMode] = useState<ThemeMode>(defaultThemeMode);
+
+  // // 获取 antd default token
+  // const token = theme.useToken().token;
+  // // 拼接 SEEDTOKEN
+  // const SEEDTOKEN = useMemo(() => {return {...token, ...defaultTheme.token}}, []);
+  // // 使用SEEDTOKEN
+  // const globalThemeConfig = useMemo<ThemeConfig>(() =>
+  //   { return {token: { ...SEEDTOKEN, ...themeColors[globalThemeMode] }} }, [globalThemeMode]);
+
+
+  const globalThemeConfig = useMemo<ThemeConfig>(() =>
+    { return {token: { ...defaultTheme.token, ...themeColors[globalThemeMode] }} }, [globalThemeMode]);
+
 
   // 主题色模式改变时逻辑链
   const themeModeChangeTo = (t: ThemeMode) => {
     setGlobalColorCSS(t);
     setGlobalThemeMode(t);
-    setGlobalThemeConfig({...defaultTheme, token: { ...themeColors[t] }});
   }
   
   const newThemeContext: GlobalThemeContextProps = {
-    getThemeMode: globalThemeMode,
+    themeMode: globalThemeMode,
     setThemeMode: themeModeChangeTo,
   }
 

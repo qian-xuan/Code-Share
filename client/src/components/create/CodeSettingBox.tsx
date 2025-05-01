@@ -1,46 +1,49 @@
-import { CalendarProps, Cascader, ConfigProvider, DatePicker, DatePickerProps, Input, ThemeConfig } from "antd";
+import { Card, Cascader, ConfigProvider, DatePicker, DatePickerProps, Input, ThemeConfig } from "antd";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { CodeDataContext } from "../../contexts/CodeDataContext";
 import { CloseCircleFilled } from '@ant-design/icons';
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { runes } from 'runes2';
 
 const theme:ThemeConfig = {
   components: {
-    Input: {
-      colorText: 'var(--color-text)',
-      addonBg: 'var(--color-AC-2)',
-      hoverBg: 'var(--color-AC-2)',
-      activeBg: 'var(--color-AC-2)',
-      colorBorder: 'var(--color-border)',
-      hoverBorderColor: 'var(--color-border)',
-      activeBorderColor: 'var(--color-border)',
-      activeShadow: '0 0 0 0px',
-      colorBgContainer: 'var(--color-AC-2)',
-      controlHeightSM: 30,
+    Card: {
+      bodyPadding: 0,
     },
-    Cascader: {
-      colorText: 'var(--color-text)',
-      colorBgLayout: 'var(--color-AC-2)',
-    },
-    DatePicker: {
-      colorText: 'var(--color-text)',
-      colorBgTextActive: 'var(--color-accent)',
-      colorBgContainer: 'var(--color-AC-2)',
-      colorBorder: 'var(--color-AC-2)',
-      activeBorderColor: 'rgba(0,0,0,0)',
-      activeShadow: '0 0 0 0px',
-      hoverBorderColor: 'rgba(0,0,0,0)',
-      colorSplit: 'var(--color-border)',
-      controlHeight: 30,
-      colorBgElevated: 'var(--color-AC-3)',
-      colorPrimary: 'var(--color-accent)',
-      colorTextPlaceholder: 'var(--color-text-disabled)',
-      colorTextDisabled: 'var(--color-text-disabled)',
-      colorTextLightSolid: 'var(--color-text-accent)',
-      colorIcon: 'var(--color-text-disabled)',
-      colorIconHover: 'var(--color-accent)',
-    }
+    // Input: {
+    //   colorText: 'var(--color-text)',
+    //   addonBg: 'var(--color-AC-2)',
+    //   hoverBg: 'var(--color-AC-2)',
+    //   activeBg: 'var(--color-AC-2)',
+    //   colorBorder: 'var(--color-border)',
+    //   hoverBorderColor: 'var(--color-border)',
+    //   activeBorderColor: 'var(--color-border)',
+    //   activeShadow: '0 0 0 0px',
+    //   colorBgContainer: 'var(--color-AC-2)',
+    //   controlHeightSM: 30,
+    // },
+    // Cascader: {
+    //   colorText: 'var(--color-text)',
+    //   colorBgLayout: 'var(--color-AC-2)',
+    // },
+    // DatePicker: {
+    //   colorText: 'var(--color-text)',
+    //   colorBgTextActive: 'var(--color-accent)',
+    //   colorBgContainer: 'var(--color-AC-2)',
+    //   colorBorder: 'var(--color-AC-2)',
+    //   activeBorderColor: 'rgba(0,0,0,0)',
+    //   activeShadow: '0 0 0 0px',
+    //   hoverBorderColor: 'rgba(0,0,0,0)',
+    //   colorSplit: 'var(--color-border)',
+    //   controlHeight: 30,
+    //   colorBgElevated: 'var(--color-AC-3)',
+    //   colorPrimary: 'var(--color-accent)',
+    //   colorTextPlaceholder: 'var(--color-text-disabled)',
+    //   colorTextDisabled: 'var(--color-text-disabled)',
+    //   colorTextLightSolid: 'var(--color-text-accent)',
+    //   colorIcon: 'var(--color-text-disabled)',
+    //   colorIconHover: 'var(--color-accent)',
+    // }
   },
 }
 
@@ -91,7 +94,7 @@ const CodeSettingBox: React.FC<{setFcName: Dispatch<SetStateAction<string>>}> = 
     </div>
   );
   
-  const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+  const onDateChange: DatePickerProps['onChange'] = (date) => {
     dateChangeTo(date);
   };
 
@@ -101,28 +104,28 @@ const CodeSettingBox: React.FC<{setFcName: Dispatch<SetStateAction<string>>}> = 
       {/* Input 区域 */}
       <div className="flex justify-between space-x-3">
         {/* 函数名称 */}
-        <Input
-        className="w-full !bg-AC-2"
-        size='small'
-        addonBefore='标题'
-        value={title}
-        addonAfter={
-          <button onClick={() => titleChangeTo('')}><CloseCircleFilled className="w-3"/></button>
-        }
-        count={{
-          show: false,
-          max: 40,
-          strategy: (txt) => runes(txt).length,
-          exceedFormatter: (txt, { max }) => runes(txt).slice(0, max).join(''),
-        }}
-        onChange={ (e) => {
-          titleChangeTo(e.target.value)
-        } }
-        />
+        <div className="flex w-full h-[30px] text-text rounded-[4px]">
+          <div className="w-16 h-full bg-bgBase flex items-center justify-around !text-center">标题</div>
+          <Input
+          value={title}
+          addonAfter={
+            <button onClick={() => titleChangeTo('')}><CloseCircleFilled className="w-3"/></button>
+          }
+          count={{
+            show: false,
+            max: 40,
+            strategy: (txt) => runes(txt).length,
+            exceedFormatter: (txt, { max }) => runes(txt).slice(0, max).join(''),
+          }}
+          onChange={ (e) => {
+            titleChangeTo(e.target.value)
+          } }
+          />
+        </div>
 
         {/* 标签 */}
-        <div className="flex w-full h-[30px] text-text box-border rounded-[4px]">
-          <div className="w-[60px] h-full border-border border-r-[1px] flex items-center justify-around !text-center">标签</div>
+        <div className="flex w-full h-[30px] text-text rounded-[4px]">
+          <div className="w-16 h-full bg-bgBase flex items-center justify-around !text-center">标签</div>
           <Cascader
           style={{ width: '100%' }}
           options={tagOptions}
@@ -139,8 +142,8 @@ const CodeSettingBox: React.FC<{setFcName: Dispatch<SetStateAction<string>>}> = 
           />
         </div>
         {/* 过期时间 */}
-        <div className="flex w-full h-[30px] text-text box-border rounded-[4px]">
-          <div className="w-28 h-full border-border border-r-[1px] flex items-center justify-around !text-center">过期时间</div>
+        <div className="flex w-full h-[30px] text-text rounded-[4px]">
+          <div className="w-28 h-full bg-bgBase flex items-center justify-around !text-center">过期时间</div>
           <DatePicker
           className="w-full"
           size="small"
@@ -160,13 +163,9 @@ const CodeSettingBox: React.FC<{setFcName: Dispatch<SetStateAction<string>>}> = 
       </div>
 
       {/* Markdown-it 区域 */}
-      <div className="h-96 border-[1px] border-gray-600 bg-AC-4">
-      <button onClick={
-        () => { 
-        console.log(settings) }}
-      className="p-2 bg-accent text-textAccent rounded fixed bottom-20  right-5">Test</button>
+      <Card className="h-96">
 
-      </div>
+      </Card>
     </div>
     </ConfigProvider>
   )

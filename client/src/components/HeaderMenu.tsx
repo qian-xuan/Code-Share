@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Menu, ConfigProvider} from 'antd';
+import type { MenuProps, ThemeConfig } from 'antd';
+import { ConfigProvider, Menu } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -52,31 +52,26 @@ const HeaderMenu: React.FC = () => {
     navigate(`/${e.key}`); // 跳转到对应路由
   };
 
+  const theme:ThemeConfig = {
+    token: {
+      lineWidth: 5,
+    },
+    components: {
+      Menu: {
+        horizontalLineHeight: '60px',
+        itemDisabledColor: 'var(--color-text)',
+        // itemColor: 'var(--color-menuText)',
+        // // ↓ Ali! Looking my eyes!(╯▔皿▔)╯
+        // // horizontalItemHoverColor: 'var(--color-menuText)',
+        // itemHoverColor: 'var(--color-menuText)',
+      },
+    },
+  }
+
   return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Menu: {
-            horizontalItemSelectedColor: 'var(--color-accent)',
-            horizontalLineHeight: '60px',
-            itemColor: 'var(--color-menuText)',
-            itemDisabledColor: 'var(--color-menuText)',
-            // ↓ Ali! Looking my eyes!(╯▔皿▔)╯
-            // horizontalItemHoverColor: 'var(--color-menuText)',
-            itemHoverColor: 'var(--color-menuText)',
-          },
-        },
-      }}
-    >
-      <Menu onClick={onClick} selectedKeys={[selected]} mode="horizontal" items={items} 
-      className="bg-AC-3 rounded-full font-bold w-10/12 ring-2 ring-transparent ring-offset-2 ring-offset-border"/>
-
-      {/* Menu Border Blur
-      <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} 
-      className='relative bg-gray-900 rounded-full font-bold w-10/12'>
-        <div className="absolute inset-0 rounded-full border-2 border-transparent bg-gray-900 blur-md"></div>
-      </Menu> */}
-
+    <ConfigProvider theme={theme}>
+      <Menu onClick={onClick} selectedKeys={[selected]} mode="horizontal" items={items}
+      className="rounded-full font-bold w-10/12"/>
     </ConfigProvider>
   );
 };

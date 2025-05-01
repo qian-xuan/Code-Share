@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 旧版全局 css 颜色变量 */
+/* 
+[themeMode="dark"] {
+  --color-testMark: #EE6B6B;
+  --color-pageBg: #0C0C0C;
+  --color-accent: #E3FA43;
+  --color-text: #F5F5F5;
+  --color-text-accent: #000000;
+  --color-text-disabled: #4B5563;
+  --color-menuText: #F5F5F5;
+  --color-border: #4B5563;
+  --color-AC-0: #000000;
+  --color-AC-1: #141414;
+  --color-AC-2: #161616;
+  --color-AC-3: #171717;
+  --color-AC-4: #232323;
+}
+
+[themeMode="light"] {
+  --color-testMark: #EE6B6B;
+  --color-pageBg: #F3F4F6;
+  --color-accent: #adc178;
+  --color-text: #000000;
+  --color-text-accent: #000000;
+  --color-text-disabled: #4B5563;
+  --color-menuText: #000000;
+  --color-border: #a98467;
+  --color-AC-0: #edede9;
+  --color-AC-1: #d6ccc2;
+  --color-AC-2: #d5bdaf;
+  --color-AC-3: #e3d5ca;
+  --color-AC-4: #f5ebe0;
+} */

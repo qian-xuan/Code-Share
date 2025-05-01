@@ -11,24 +11,24 @@ const theme:ThemeConfig = {
   components: {
     Tabs: {
       horizontalMargin: '0 0 0 0',
-      lineWidth: 0,
-      cardBg: 'var(--color-AC-1)',
-      // active tabs color
-      colorBgContainer: 'var(--color-AC-4)',
-      itemColor: 'var(--color-text)',
-      itemHoverColor: 'var(--color-accent)',
-      itemSelectedColor: 'var(--color-accent)',
-      // × | ＋ 按钮点击后颜色
-      itemActiveColor: 'var(--color-text)',
-      //  × color
-      colorTextDescription: 'var(--color-text)',
-      //  × hover color
-      colorText: 'var(--color-accent)',
-      colorTextHeading: 'var(--color-accent)',
       cardPaddingSM: '6px 16px',
       fontSize: 12,
       fontSizeSM: 10,
-      controlHeightLG: 20,
+      borderRadius: 8,
+      borderRadiusLG: 8,
+      // cardBg: 'var(--color-AC-1)',
+      // // active tabs color
+      // colorBgContainer: 'var(--color-AC-4)',
+      // itemColor: 'var(--color-text)',
+      // itemHoverColor: 'var(--color-accent)',
+      // itemSelectedColor: 'var(--color-accent)',
+      // // × | ＋ 按钮点击后颜色
+      // itemActiveColor: 'var(--color-text)',
+      // //  × color
+      // colorTextDescription: 'var(--color-text)',
+      // //  × hover color
+      // colorText: 'var(--color-accent)',
+      // colorTextHeading: 'var(--color-accent)',
     },
   },
 };
@@ -145,7 +145,7 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
     setCurrentLanguage(newLanguage);
   }
 
-  // TODO: 修整样式
+  // TODO: 添加可选语言
   // Tabs 边栏 Select
   const operations = (
     <Select
@@ -165,9 +165,7 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
       <ConfigProvider theme={theme} >
         <Tabs
         type="editable-card"
-        // size='small'
-        // indicator={{size: 5, align: 'center'}}
-        // tabBarStyle={{'border': '0px' }}
+        size='small'
         onChange={onChange}
         activeKey={activeKey}
         onEdit={onEdit}
@@ -185,15 +183,8 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
       forceUpdate={forceUpdate}
       />
 
-<button onClick={() => console.log(codes)}
-className="p-2 bg-accent text-textAccent rounded fixed bottom-80  right-5">Test</button>
-
     </>
   )
 };
 
 export default EditableCodeTabs;
-
-//  测试 Button
-{/* <button onClick={() => {setCurrentLanguage('javascript') }}
-className="p-2 bg-accent text-textAccent rounded fixed bottom-20  right-5">Test</button> */}
