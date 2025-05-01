@@ -17,30 +17,33 @@ function App() {
   const toggleTheme = () => {
     theme = theme === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("themeMode", theme);
+    console.log(document.documentElement.getAttribute("--color-accent"));
   };
 
   return (
-    <div id="app" className="justify-items-center text-text pt-[2rem] pb-[2rem]">
-      {/* 顶部菜单 */}
-      <HeaderMenu />
+    <div id='pagebody' className='flex justify-around bg-pageBg'>
+      <div id="app" className='justify-items-center text-text pt-[2rem] pb-[2rem] w-full min-w-[1080px] max-w-[1280px]'>
+        {/* 顶部菜单 */}
+        <HeaderMenu />
 
-      {/* 动态渲染 Page 组件 */}
-      <div id="pageBody" className="w-9/12 pt-5">
-        <Routes>
-          <Route path="/" element={<Navigate to ="/codes" />} />
-          {/* <Route path="/create" element={<MemoizedCreateCodePage />} /> */}
-          <Route path="/create" element={<EditCodePage key="create" />} />
-          <Route path="/codes" element={<CodeListPage />} />
-          <Route path="/share" element={<CardSharePage />} />
-        </Routes>
+        {/* 动态渲染 Page 组件 */}
+        <div id="pageBody" className="w-9/12 pt-5">
+          <Routes>
+            <Route path="/" element={<Navigate to ="/codes" />} />
+            {/* <Route path="/create" element={<MemoizedCreateCodePage />} /> */}
+            <Route path="/create" element={<EditCodePage key="create" />} />
+            <Route path="/codes" element={<CodeListPage />} />
+            <Route path="/share" element={<CardSharePage />} />
+          </Routes>
+        </div>
+
+        {/* 主题切换按钮 */}
+        <Button size='large' shape='circle' icon={<SunOutlined />} onClick={toggleTheme} 
+        className='fixed bottom-5 right-5'/>
+
+        {/* className="p-2 bg-accent text-textAccent rounded fixed bottom-20  right-5" */}
+      
       </div>
-
-      {/* 主题切换按钮 */}
-      <Button size='large' shape='circle' icon={<SunOutlined />} onClick={toggleTheme} 
-      className='fixed bottom-5 right-5'/>
-
-      {/* className="p-2 bg-accent text-textAccent rounded fixed bottom-20  right-5" */}
-    
     </div>
   );
 }

@@ -6,6 +6,9 @@ import CodeSettingBox from '../components/create/CodeSettingBox';
 import { Collapse, ConfigProvider, Radio, RadioChangeEvent, ThemeConfig } from 'antd';
 
 const theme:ThemeConfig = {
+  token: {
+    colorPrimary: 'var(--color-accent)',
+  },
   components: {
     Collapse: {
       headerBg: "var(--color-AC-3)",
@@ -85,3 +88,8 @@ const EditCodePage: React.FC<{ codeData?: CodeData }> = ({ codeData = new CodeDa
 };
 
 export default EditCodePage;
+
+// !TODO:
+// 1. config
+// 2. redux
+// 3. 
