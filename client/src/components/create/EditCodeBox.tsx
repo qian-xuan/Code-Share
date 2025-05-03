@@ -1,9 +1,12 @@
 import { Card, ConfigProvider } from "antd";
 import AppleDots from "../AppleDots";
 import EditableCodeTabs from "./EditableCodeTabs";
+import { useSelector } from "react-redux";
+import { StateType } from "../../store/store";
 
 
-const EditCodeBox: React.FC<{fcName: string}> = ( {fcName} ) => {
+const EditCodeBox = () => {
+  const fcName = useSelector((state: StateType) => state.edit.editPageData.settings.title);
   return (
     <ConfigProvider theme={{components:{Card:{bodyPadding: 0,}}}}>
     <Card className="flex-row rounded-t-xl p-4 pt-3">

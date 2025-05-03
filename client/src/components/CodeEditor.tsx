@@ -1,6 +1,8 @@
 import { Editor, useMonaco } from '@monaco-editor/react';
-import React, { useContext, useEffect, useRef } from 'react';
-import { CodeDataContext } from '../contexts/CodeDataContext';
+import React, { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { DispatchType, StateType } from '../store/store';
+import { updateCode } from '../store/editPageSlice';
 
 interface CodeEditorProps {
   language?: string,
@@ -11,8 +13,11 @@ interface CodeEditorProps {
 
 const CodeEditor: React.FC<CodeEditorProps> = ({ language = 'html', page, readOnly, forceUpdate }) => {
   const editorRef = useRef<any>(null); // 引用 Editor 实例
-  const codes = useContext(CodeDataContext).codes;
+  // const codes = useContext(CodeDataContext).codes;
   const monaco = useMonaco();
+
+  const codes = useSelector((state: StateType) => state.edit.editPageData.codes);
+  const dispatch: DispatchType = useDispatch();
 
   // 获取编辑器实例
   const handleEditorDidMount = (editor: any) => {
@@ -57,7 +62,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language = 'html', page, readOn
 
   // 编辑器内容变更
   const onchange = (value: string | undefined) => {
-    codes[page].code = value;
+    dispatch(updateCode({page: page, code: value}));
     // console.log(page)
     // console.log(codes)
   }

@@ -3,6 +3,10 @@ import { PlusOutlined } from '@ant-design/icons';
 import type { MenuProps, ThemeConfig } from 'antd';
 import { ConfigProvider, Menu } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { DispatchType } from '../store/store';
+import { useDispatch } from 'react-redux';
+import { seteditPageData } from '../store/editPageSlice';
+import { defaultCodeData } from '../types/CodeData';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -38,16 +42,19 @@ const HeaderMenu: React.FC = () => {
   const location = useLocation(); // 获取当前路由
   const navigate = useNavigate(); // 用于导航
   const [selected, setSelected] = useState('codeList');
+  const dispatch: DispatchType = useDispatch();
 
   // 根据当前路由更新选中项
   useEffect(() => {
     const path = location.pathname.replace('/', '');
-    setSelected(path || 'codeList'); // 如果路径为空，默认选中 "create"
+    setSelected(path || 'codeList'); // 如果路径为空，默认选中 "codeList"
   }, [location]);
 
   // 点击菜单项时导航到对应路由
   const onClick: MenuProps['onClick'] = (e) => {
-    // console.log('click ', e);
+    if (e.key === 'create') {
+      dispatch(seteditPageData(defaultCodeData));
+    };
     setSelected(e.key);
     navigate(`/${e.key}`); // 跳转到对应路由
   };

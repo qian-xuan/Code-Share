@@ -1,7 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ConfigProvider, Select, Tabs, ThemeConfig } from 'antd';
 import CodeEditor from '../CodeEditor';
-import { CodeDataContext } from '../../contexts/CodeDataContext';
+import { useDispatch } from 'react-redux';
+import store, { DispatchType } from '../../store/store';
+import { addCode, removeCode, setLanguage } from '../../store/editPageSlice';
+import { LanguageType } from '../../types/CodeData';
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 
@@ -39,38 +42,44 @@ interface TabItem {
 }
 
 const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
-  const codes = useContext(CodeDataContext).codes;
-  const [activeKey, setActiveKey] = useState("0");
+  const dispatch: DispatchType = useDispatch();
+
+  const [activeKey, setActiveKey] = useState('0');
   const [currentPage, setCurrentPage] = useState(0);
-  const [currentLanguage, setCurrentLanguage] = useState('html');
-  // const sharedEditor = useMemo(() => <CodeEditor language='html' page={page} readOnly={false} key={'sharedEditor'}/>, [page]);
+  const [currentLanguage, setCurrentLanguage] = useState<LanguageType>('html');
   
   // 强制更新Editor的内容
   const [forceUpdate, setForceUpdate] = useState(0);
   const useForceUpdateEditor = () => setForceUpdate(forceUpdate+1);
 
-
   // 初始化页面数
-  const items: TabItem[] = [];
-  if (codes.length === 0) {
-    items.push({ label: "代码 1", key: "0" });
-    codes.push({ language: "html", code: "// 输入代码..." });
-  } else {
-    codes.forEach(({}, index) =>{
-      items.push({ label: `代码 ${index + 1}`,  key: index.toString() });
-    })
-  }
+  const [tabItemsChange, setTabItemsChange] = useState(false);
+  const tabItems = useMemo(() => {
+    const codes = store.getState().edit.editPageData.codes;
+    const items: TabItem[] = [];
+    if (codes.length === 0) {
+      items.push({ label: "代码 1", key: "0" });
+      dispatch(addCode({ language: "html", code: "// 输入代码..." }));
+    } else {
+      codes.forEach(({}, index) =>{
+        items.push({ label: `代码 ${index + 1}`,  key: index.toString() });
+      })
+    }
+    return items;
+  }, [tabItemsChange]);
+
 
   // Page 变动时逻辑链
   const tabChangeLogic:any = (value: number | string) => {
     const newPage = Number(value);
-    if (newPage > codes.length-1) { alert("超出范围"); return;}
+    if (newPage > store.getState().edit.editPageData.codes.length-1) {
+      alert("超出范围");
+      return;
+    }
     setActiveKey(newPage.toString());
     setCurrentPage(newPage);
-    setCurrentLanguage(codes[newPage].language);
+    setCurrentLanguage(store.getState().edit.editPageData.codes[newPage].language);
   }
-  
-  const [tabItems, setTabItems] = useState(items);
 
   // 切换 Page 
   const onChange = (newActiveKey: string) => {
@@ -78,50 +87,35 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
   };
 
   // 添加 Page
-  const add = () => {
-    const newPage = codes.length;
-    const newPanes = [...tabItems];
-    newPanes.push({ label: `代码${newPage+1}`, key: newPage.toString() });
-    codes.push({ language: currentLanguage, code: '// 输入代码...' });
-    // ! For testOnly, plz delete ↓
-    // codes.push({ language: currentLanguage, code: `${newPage+1}` });
-    setTabItems(newPanes);
-
+  const add = async () => {
+    const newPage = tabItems.length;
+    dispatch(addCode({ language: currentLanguage, code: '// 输入代码...' }));
+    setTabItemsChange(!tabItemsChange);
     tabChangeLogic(newPage);
   };
 
   // 删除 Page
   const remove = (targetKey: TargetKey) => {
     // TODO: alert here
-    if (tabItems.length === 1) return; 
+    if (tabItems.length === 1) return;
+
     let activePage = Number(activeKey);
     let removePage = Number(targetKey);
 
-    if (removePage > codes.length-1) {
+    if (removePage > tabItems.length-1) {
       alert("out of range");
       return;
     }
 
-    const newPanes = tabItems.slice(0, removePage);
-    if (removePage + 1 < tabItems.length) {
-      // console.log(tabItems)
-      // console.log(newPanes)
-      // console.log(tabItems.slice(removePage + 1, ))
-      tabItems.slice(removePage + 1, ).forEach((item: TabItem) => {
-        const itemPage = Number(item.key);
-        newPanes.push({ label: `代码${itemPage}`, key: (itemPage-1).toString() });
-      });
-    }
-    codes.splice(removePage, 1);
+    dispatch(removeCode(removePage));
+    setTabItemsChange(!tabItemsChange);
 
     // 更新 Tabs 面板 && 执行页面变更逻辑
-    setTabItems(newPanes);
     // 删除页在显示页前 || 显示页===最后一页===删除页
-    if ((activePage > removePage) || (activePage === codes.length))
-      tabChangeLogic( Math.min(activePage-1, codes.length-1) );
+    if ((activePage > removePage) || (activePage === tabItems.length-1))
+      tabChangeLogic( Math.min(activePage-1, tabItems.length-1) );
     else if (activePage === removePage) {
       // ! 强制更新 Page Language
-      // setCurrentLanguage(codes[activePage].language);
       tabChangeLogic(activePage);
       useForceUpdateEditor();
     }
@@ -140,8 +134,8 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
   };
 
   // 修改语言
-  const changeLanguage = (newLanguage: string) => {
-    codes[currentPage].language = newLanguage
+  const changeLanguage = (newLanguage: LanguageType) => {
+    dispatch(setLanguage({page: currentPage, language: newLanguage}));
     setCurrentLanguage(newLanguage);
   }
 
@@ -149,6 +143,7 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
   // Tabs 边栏 Select
   const operations = (
     <Select
+    className='ml-4'
     defaultValue="html"
     value={currentLanguage}
     style={{ width: 120 }}

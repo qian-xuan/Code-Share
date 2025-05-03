@@ -1,9 +1,11 @@
 import { Card, Cascader, ConfigProvider, DatePicker, DatePickerProps, Input, ThemeConfig } from "antd";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
-import { CodeDataContext } from "../../contexts/CodeDataContext";
+import { useState } from "react";
 import { CloseCircleFilled } from '@ant-design/icons';
 import dayjs from "dayjs";
 import { runes } from 'runes2';
+import { useDispatch, useSelector } from "react-redux";
+import { DispatchType, StateType } from "../../store/store";
+import { setFCName, setOvertime } from "../../store/editPageSlice";
 
 const theme:ThemeConfig = {
   components: {
@@ -65,21 +67,21 @@ const tagOptions: TagOption[] = [
 ];
 
 
-const CodeSettingBox: React.FC<{setFcName: Dispatch<SetStateAction<string>>}> = ( {setFcName} ) => {
-  const settings = useContext(CodeDataContext).settings;
+const CodeSettingBox = () => {
+  const settings = useSelector((state: StateType) => state.edit.editPageData.settings);
+  const dispatch: DispatchType = useDispatch();
   const [title, setTitle] = useState(settings.title);
   const [date, setDate] = useState<dayjs.Dayjs | undefined>(settings.overtime === undefined ? undefined : dayjs(settings.overtime));
 
   const titleChangeTo = (t: string) => {
-    settings.title;
+    dispatch(setFCName(t));
     setTitle(t);
-    setFcName(t);
   }
 
   const dateChangeTo = (date: dayjs.Dayjs) => {
     setDate(date)
-    if (date === null) { settings.overtime = undefined; return; }
-    settings.overtime = date.format('YYYY-MM-DD HH:mm:ss');
+    if (date === null) { dispatch(setOvertime(undefined)); return; }
+    dispatch(setOvertime(date.format('YYYY-MM-DD HH:mm:ss')));
   }
   
   const dateBtn = (
