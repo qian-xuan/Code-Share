@@ -25,6 +25,9 @@ const editPageSlice = createSlice({
     setLanguage: (state, action: PayloadAction<{ page: number, language: LanguageType }>) => {
       state.editPageData.codes[action.payload.page].language = action.payload.language;
     },
+    setTags: (state, action: PayloadAction<string[]>) => {
+      state.editPageData.settings.tags = action.payload;
+    },
     setOvertime: (state, action: PayloadAction<string | undefined>) => {
       state.editPageData.settings.overtime = action.payload;
     },
@@ -36,5 +39,6 @@ const editPageSlice = createSlice({
     },
   }
 })
-export const { setFCName, seteditPageData, addCode, removeCode, setLanguage, updateCode, setOvertime, updateCache } = editPageSlice.actions;
+export const { setFCName, seteditPageData, addCode, removeCode, setLanguage,
+  updateCode, setOvertime, updateCache, setTags } = editPageSlice.actions;
 export default editPageSlice.reducer;

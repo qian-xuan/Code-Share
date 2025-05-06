@@ -22,16 +22,14 @@ const theme:ThemeConfig = {
 const EditCodePage = () => {
   const [ifEncrypt, setIfEncrypt] = useState(false);
   
-  console.log(ifEncrypt);
-
   const codeData = useSelector((state: StateType) => state.edit.editPageDataCache);
   const dispatch: DispatchType = useDispatch();
-
+  
+  console.log(ifEncrypt);
   console.log(codeData);
 
   const onSubmit = () => {
     dispatch(updateCache());
-
   }
   
   return (

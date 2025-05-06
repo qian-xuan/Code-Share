@@ -9,8 +9,8 @@ const defaultThemeMode:ThemeMode = 'light';
 // 定义各主题色色值
 const themeColors: Record<ThemeMode, ThemeConfig['token']> = {
   light: {
-    colorBgBase: '#f4acb7',
-    colorPrimary: '#9d0208',
+    colorBgBase: '#8ecae6',
+    colorPrimary: '#023e8a',
     colorTextBase: '#000000',
   },
   dark: {

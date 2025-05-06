@@ -5,7 +5,9 @@ import dayjs from "dayjs";
 import { runes } from 'runes2';
 import { useDispatch, useSelector } from "react-redux";
 import { DispatchType, StateType } from "../../store/store";
-import { setFCName, setOvertime } from "../../store/editPageSlice";
+import { setFCName, setOvertime, setTags } from "../../store/editPageSlice";
+import { CascaderProps } from "rc-cascader";
+// import MarkdownIt from "./MarkdownIt";
 
 const theme:ThemeConfig = {
   components: {
@@ -57,12 +59,16 @@ interface TagOption {
 
 const tagOptions: TagOption[] = [
   {
-    label: 'Light',
-    value: 'light',
+    label: 'html',
+    value: 'html',
   },
   {
-    label: 'Bamboo',
-    value: 'bamboo',
+    label: 'javascript',
+    value: 'javascript',
+  },
+  {
+    label: '作业',
+    value: '作业',
   },
 ];
 
@@ -77,6 +83,15 @@ const CodeSettingBox = () => {
     dispatch(setFCName(t));
     setTitle(t);
   }
+
+  const onTagsChange: CascaderProps<any, 'value', true>['onChange'] = (value) => {
+    const tags: string[] = [];
+    value.forEach((value) => {
+      tags.push(value[0]);
+    });
+    console.log(tags)
+    dispatch(setTags(tags));
+  };
 
   const dateChangeTo = (date: dayjs.Dayjs) => {
     setDate(date)
@@ -106,8 +121,9 @@ const CodeSettingBox = () => {
       {/* Input 区域 */}
       <div className="flex justify-between space-x-3">
         {/* 函数名称 */}
-        <div className="flex w-full h-[30px] text-text rounded-[4px]">
-          <div className="w-16 h-full bg-bgBase flex items-center justify-around !text-center">标题</div>
+        <div className="flex w-full h-[32px] text-text rounded-[4px] space-x-[2px]">
+          {/* <div className="w-16 h-full flex items-center justify-around !text-center">标题</div> */}
+          <Card className="w-16 bg-bgBase flex items-center justify-around !text-center">标题</Card>
           <Input
           value={title}
           addonAfter={
@@ -126,16 +142,16 @@ const CodeSettingBox = () => {
         </div>
 
         {/* 标签 */}
-        <div className="flex w-full h-[30px] text-text rounded-[4px]">
-          <div className="w-16 h-full bg-bgBase flex items-center justify-around !text-center">标签</div>
+        <div className="flex w-full h-[32px] text-text rounded-[4px] space-x-[2px]">
+          <Card className="w-16 bg-bgBase flex items-center justify-around !text-center">标签</Card>
           <Cascader
           style={{ width: '100%' }}
           options={tagOptions}
-          // onChange={onChange}
+          onChange={onTagsChange}
           multiple
           maxTagCount="responsive"
           showSearch={{}}
-          // showCheckedStrategy={SHOW_CHILD}
+          // showCheckedStrategy={}
           // defaultValue={[
           //   ['bamboo', 'little', 'fish'],
           //   ['bamboo', 'little', 'cards'],
@@ -144,8 +160,8 @@ const CodeSettingBox = () => {
           />
         </div>
         {/* 过期时间 */}
-        <div className="flex w-full h-[30px] text-text rounded-[4px]">
-          <div className="w-28 h-full bg-bgBase flex items-center justify-around !text-center">过期时间</div>
+        <div className="flex w-full h-[32px] text-text rounded-[4px] space-x-[2px]">
+          <Card className="w-28 bg-bgBase flex items-center justify-around !text-center">过期时间</Card>
           <DatePicker
           className="w-full"
           size="small"
@@ -168,6 +184,7 @@ const CodeSettingBox = () => {
       <Card className="h-96">
 
       </Card>
+      {/* <MarkdownIt /> */}
     </div>
     </ConfigProvider>
   )
