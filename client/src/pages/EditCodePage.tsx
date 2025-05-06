@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import EditCodeBox from '../components/create/EditCodeBox';
-import CodeSettingBox from '../components/create/CodeSettingBox';
+import EditCodeBox from '../components/edit/EditCodeBox';
+import CodeSettingBox from '../components/edit/CodeSettingBox';
 import { Button, Collapse, ConfigProvider, Radio, RadioChangeEvent, ThemeConfig } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { DispatchType, StateType } from '../store/store';
