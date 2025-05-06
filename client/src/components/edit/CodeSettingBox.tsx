@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { DispatchType, StateType } from "../../store/store";
 import { setFCName, setOvertime, setTags } from "../../store/editPageSlice";
 import { CascaderProps } from "rc-cascader";
-// import MarkdownIt from "./MarkdownIt";
+import MarkdownEditor from './MarkdownEditor.tsx'
 
 const theme:ThemeConfig = {
   components: {
@@ -181,10 +181,8 @@ const CodeSettingBox = () => {
       </div>
 
       {/* Markdown-it 区域 */}
-      <Card className="h-96">
+      <MarkdownEditor />
 
-      </Card>
-      {/* <MarkdownIt /> */}
     </div>
     </ConfigProvider>
   )
