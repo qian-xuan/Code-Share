@@ -40,9 +40,11 @@ const EditCodePage = () => {
 
   const onSubmit = () => {
     const data = store.getState().edit.editPageData;
+    // TODO: 密码格式限制 && data格式校验
     if (ifEncrypt) {
       const e = encrypt(data, key);
       // TODO: 上传数据库
+      // postMessage()
       console.log(e);
       console.log(decrypt(e, key));
       return;

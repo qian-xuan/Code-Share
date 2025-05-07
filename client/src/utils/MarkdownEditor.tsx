@@ -47,7 +47,7 @@ const MarkdownEditor = () => {
 
   return (
     <Card className="h-96">
-      <MdEditor style={{ height: '380px',}} renderHTML={text => mdParser.render(text)} onChange={onchange} defaultValue={description} />
+      <MdEditor style={{ height: '380px'}} renderHTML={text => mdParser.render(text)} onChange={onchange} defaultValue={description} />
     </Card>
   );
 };

@@ -4,6 +4,7 @@ import serve from 'koa-static'
 import { fileURLToPath } from 'url'
 import path from 'path'
 import fs from 'fs';
+import { Sequelize, DataTypes } from 'sequelize';
 
 const hostname = "localhost"
 const post = 3001
@@ -13,13 +14,35 @@ const router = new Router()
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const staticPath = path.join(__dirname, '/dist')
-app.use(serve(staticPath))
 
+
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: './database.sqlite',  // 数据库文件路径
+});
+
+// 定义模型
+const CodeData = sequelize.define('CodeData', {
+  id: {
+    type: DataTypes.STRING,
+    primaryKey: true,
+  },
+  data: DataTypes.JSON,
+});
+
+// 同步模型到数据库
+sequelize.sync();
+
+// 提供静态文件服务
+app.use(serve(staticPath));
+
+const frontRoutes = ['/create', '/codes', '/share']
 // get
 app.use(async (ctx, next) => {
   await next();
-
-  if (ctx.status === 404 && ctx.method === 'GET') {
+  const pathname = ctx.URL.pathname;
+  if ((ctx.method === 'GET') && frontRoutes.includes(pathname)) {
+    console.log(pathname)
     const indexPath = path.join(staticPath, 'index.html');
     if (fs.existsSync(indexPath)) {
       ctx.type = 'html';
@@ -31,12 +54,33 @@ app.use(async (ctx, next) => {
   }
 });
 
+// 注册路由
+router.get('/api/codedata', async (ctx) => {
+  try {
+    const users = await CodeData.findAll();
+    ctx.body = users;
+  } catch (err) {
+    ctx.status = 500;
+    ctx.body = { error: 'Failed to fetch users' };
+  }
+});
+
+router.post('/api/codedata/', async (ctx) => {
+  try {
+    const { id, data } = ctx.request.body;
+    const newUser = await CodeData.create({ id, data });
+    ctx.body = newUser;
+  } catch (err) {
+    ctx.status = 500;
+    ctx.body = { error: 'Failed to create user' };
+  }
+});
+
 app.use(router.routes())
 
 app.listen(post, hostname, () => {
   console.log(`Server running at http://${hostname}:${post}/`)
 })
-
 
 
 // const Koa = require('koa')

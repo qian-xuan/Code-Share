@@ -10,33 +10,17 @@ export type CodeData = {
     tags: string[],
     overtime: string | undefined,
     description: string,
-  };
-}
+    encrypted: boolean,
+  }
+};
 
-export const defaultCodeData:CodeData = {
+export const defaultCodeData: CodeData = {
   codes: [],
   settings: {
     title: '',
     tags: [],
     overtime: undefined,
     description: '',
+    encrypted: false,
   }
 }
-
-
-
-// constructor() {
-//   this.codes = [];
-//   this.settings = {
-//     title: "",
-//     tags: [],
-//     overtime: undefined,
-//     description: "",
-//   };
-// }
-
-// 示例方法：添加代码
-// addCode(code: string, type: string) {
-//   this.codes.push({ code, type });
-// }
-// }
