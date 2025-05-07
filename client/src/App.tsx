@@ -4,7 +4,7 @@ import HeaderMenu from './components/HeaderMenu'
 import EditCodePage from './pages/EditCodePage'
 import CodeListPage from './pages/CodeListPage'
 import CardSharePage from './pages/CardSharePage'
-import { Button } from 'antd'
+import { FloatButton } from 'antd'
 import { SunOutlined } from '@ant-design/icons'
 import { useContext } from 'react'
 import { GlobalThemeContext } from './contexts/GlobalThemeContext'
@@ -36,7 +36,7 @@ function App() {
         </div>
 
         {/* 主题切换按钮 */}
-        <Button size='large' shape='circle' icon={<SunOutlined />} onClick={toggleTheme} 
+        <FloatButton shape='circle' icon={<SunOutlined />} onClick={toggleTheme} 
         className='fixed bottom-5 right-5'/>
       
       </div>

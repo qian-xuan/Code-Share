@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import EditCodeBox from '../components/edit/EditCodeBox';
 import CodeSettingBox from '../components/edit/CodeSettingBox';
-import { Button, Collapse, ConfigProvider, Radio, RadioChangeEvent, ThemeConfig } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { DispatchType, StateType } from '../store/store';
-import { updateCache } from '../store/editPageSlice';
+import { Button, Collapse, ConfigProvider, Input, Radio, RadioChangeEvent, ThemeConfig } from 'antd';
+import store from '../store/store';
+import { decrypt, encrypt } from '../utils/crypto';
+import runes from 'runes2';
+import { CloseCircleFilled, ReloadOutlined } from '@ant-design/icons';
 
 const theme:ThemeConfig = {
   components: {
@@ -16,20 +17,37 @@ const theme:ThemeConfig = {
       paddingXS: 15,
       controlHeightSM: 27,
     },
+    Card: {
+      
+    }
   },
 }
 
+const randomString = (length: number): string => {
+  // const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * chars.length);
+    result += chars[randomIndex];
+  }
+  return result;
+};
+
 const EditCodePage = () => {
   const [ifEncrypt, setIfEncrypt] = useState(false);
-  
-  const codeData = useSelector((state: StateType) => state.edit.editPageDataCache);
-  const dispatch: DispatchType = useDispatch();
-  
-  console.log(ifEncrypt);
-  console.log(codeData);
+  const [key, setKey] = useState(randomString(6));
 
   const onSubmit = () => {
-    dispatch(updateCache());
+    const data = store.getState().edit.editPageData;
+    if (ifEncrypt) {
+      const e = encrypt(data, key);
+      // TODO: 上传数据库
+      console.log(e);
+      console.log(decrypt(e, key));
+      return;
+    }
+    // TODO: 上传数据库
   }
   
   return (
@@ -63,11 +81,27 @@ const EditCodePage = () => {
           >提交</Button>
         </div>
         {/* 加密框 */}
-        <div>
-          
-        </div>
+        { ifEncrypt &&
+        (<div className='flex w-60 text-text pt-2 space-x-2 items-center'>
+          <Input
+          prefix='密码 : '
+          size='small'
+          value={key}
+          addonAfter={
+            <button onClick={() => setKey('')}><CloseCircleFilled className="w-3"/></button>
+          }
+          count={{
+            show: false,
+            max: 16,
+            strategy: (txt) => runes(txt).length,
+            exceedFormatter: (txt, { max }) => runes(txt).slice(0, max).join(''),
+          }}
+          onChange={(e) => setKey(e.target.value)}
+          />
+          <Button onClick={() => setKey(randomString(6))}
+          className='border-none' size='small' variant='text' shape='circle' icon={<ReloadOutlined />} ghost/>
+        </div>)}
       </div>
-
     </div>
     </ConfigProvider>
   );

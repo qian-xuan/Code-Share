@@ -3,6 +3,7 @@ import Router from '@koa/router'
 import serve from 'koa-static'
 import { fileURLToPath } from 'url'
 import path from 'path'
+import fs from 'fs';
 
 const hostname = "localhost"
 const post = 3001
@@ -15,9 +16,20 @@ const staticPath = path.join(__dirname, '/dist')
 app.use(serve(staticPath))
 
 // get
-router.get('/codes', (ctx) => {
-  ctx.body = 'Hello World!'
-})
+app.use(async (ctx, next) => {
+  await next();
+
+  if (ctx.status === 404 && ctx.method === 'GET') {
+    const indexPath = path.join(staticPath, 'index.html');
+    if (fs.existsSync(indexPath)) {
+      ctx.type = 'html';
+      ctx.body = fs.createReadStream(indexPath);
+    } else {
+      ctx.status = 404;
+      ctx.body = '404 Not Found';
+    }
+  }
+});
 
 app.use(router.routes())
 
