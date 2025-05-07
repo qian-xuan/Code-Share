@@ -1,11 +1,11 @@
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 
-import store from '../../store/store';
+import store from '../store/store';
 import { Card } from 'antd';
 import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { setDescription } from '../../store/editPageSlice';
+import { setDescription } from '../store/editPageSlice';
 
 // 导入编辑器的样式
 import 'react-markdown-editor-lite/lib/index.css';
@@ -32,6 +32,9 @@ const mdParser = new MarkdownIt({
   },
 });
 
+export const parseMarkdown = (text: string): string => {
+  return mdParser.render(text);
+}
 
 const MarkdownEditor = () => {
   const description = useMemo(() => store.getState().edit.editPageData.settings.description, []);

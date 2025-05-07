@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { DispatchType, StateType } from "../../store/store";
 import { setFCName, setOvertime, setTags } from "../../store/editPageSlice";
 import { CascaderProps } from "rc-cascader";
-import MarkdownEditor from './MarkdownEditor.tsx'
+import MarkdownEditor from '../../utils/MarkdownEditor.tsx'
 
 const theme:ThemeConfig = {
   components: {
