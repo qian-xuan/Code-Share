@@ -1,6 +1,7 @@
 import Koa from 'koa'
 import Router from '@koa/router'
 import serve from 'koa-static'
+import bodyParser from 'koa-bodyparser';
 import { fileURLToPath } from 'url'
 import path from 'path'
 import fs from 'fs';
@@ -15,6 +16,7 @@ const router = new Router()
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const staticPath = path.join(__dirname, '/dist')
 
+app.use(bodyParser());
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',
@@ -36,13 +38,13 @@ sequelize.sync();
 // 提供静态文件服务
 app.use(serve(staticPath));
 
+// 交由前端 Routes 处理的页面
 const frontRoutes = ['/create', '/codes', '/share']
-// get
 app.use(async (ctx, next) => {
   await next();
   const pathname = ctx.URL.pathname;
+  console.log(pathname)
   if ((ctx.method === 'GET') && frontRoutes.includes(pathname)) {
-    console.log(pathname)
     const indexPath = path.join(staticPath, 'index.html');
     if (fs.existsSync(indexPath)) {
       ctx.type = 'html';
@@ -55,7 +57,7 @@ app.use(async (ctx, next) => {
 });
 
 // 注册路由
-router.get('/api/codedata', async (ctx) => {
+router.get('/codedata', async (ctx) => {
   try {
     const users = await CodeData.findAll();
     ctx.body = users;
@@ -65,8 +67,9 @@ router.get('/api/codedata', async (ctx) => {
   }
 });
 
-router.post('/api/codedata/', async (ctx) => {
+router.post('/api/post/codedata', async (ctx) => {
   try {
+    console.log(ctx.request.body)
     const { id, data } = ctx.request.body;
     const newUser = await CodeData.create({ id, data });
     ctx.body = newUser;

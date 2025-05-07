@@ -44,12 +44,24 @@ const EditCodePage = () => {
     if (ifEncrypt) {
       const e = encrypt(data, key);
       // TODO: 上传数据库
-      // postMessage()
       console.log(e);
       console.log(decrypt(e, key));
       return;
     }
     // TODO: 上传数据库
+    fetch('/api/post/codedata', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data),
+    })
+    .then(res => {
+      if (res.ok) return res.json;
+    })
+    .then(data => {
+      console.log(data);
+    });
   }
   
   return (
