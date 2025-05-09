@@ -11,7 +11,10 @@ interface CodeEditorProps {
   forceUpdate?: Number
 };
 
+console.log('create editor')
+
 const CodeEditor: React.FC<CodeEditorProps> = ({ language = 'html', page, readOnly, forceUpdate }) => {
+  console.log('update editor')
   const editorRef = useRef<any>(null); // 引用 Editor 实例
   // const codes = useContext(CodeDataContext).codes;
   const monaco = useMonaco();

@@ -1,13 +1,13 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import EditCodeBox from '../components/edit/EditCodeBox';
 import CodeSettingBox from '../components/edit/CodeSettingBox';
 import { Button, Collapse, ConfigProvider, Input, Radio, RadioChangeEvent, ThemeConfig } from 'antd';
-import store from '../store/store';
+import store, { StateType } from '../store/store';
 import { encrypt } from '../utils/crypto';
 import runes from 'runes2';
 import { CloseCircleFilled, ReloadOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
-import { seteditPageData, setEncrypted, setID, setValidated } from '../store/editPageSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { seteditPageData, seteditPageDataCache, setEncrypted, setID, setValidated } from '../store/editPageSlice';
 import { useNavigate } from 'react-router-dom';
 import { defaultCodeData } from '../types/CodeData';
 
@@ -39,61 +39,57 @@ const randomString = (length: number): string => {
 };
 
 const EditCodePage = () => {
-  useMemo(() => {
-    const validated = store.getState().edit.validated;
-    if (!validated) {
-      const dispatch = useDispatch();
-      dispatch(seteditPageData(defaultCodeData));
-      dispatch(setValidated(true))
-    }
-  }, []);
+  const validated = useSelector((state: StateType) => state.edit.validated);
+  const dispatch = useDispatch();
+  if (!validated) {
+    console.log('here')
+    dispatch(seteditPageData(defaultCodeData));
+    dispatch(setValidated(true))
+  }
+
 
   const [ifEncrypt, setIfEncrypt] = useState(false);
   const [key, setKey] = useState(randomString(6));
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // 通用的提交函数
+  const submitData = async (url: string, body: any, headers: HeadersInit) => {
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body,
+      });
+
+      if (!response.ok) {
+        throw new Error('提交失败，请稍后重试');
+      }
+
+      const resJson = await response.json();
+      dispatch(setID(resJson.id));
+      dispatch(seteditPageDataCache(store.getState().edit.editPageData))
+      setValidated(false);
+      navigate(`/success?id=${resJson.id}`);
+    } catch (error) {
+      console.error('Error:', error);
+      alert(error || '提交失败');
+    }
+  };
 
   const onSubmit = () => {
     const data = store.getState().edit.editPageData;
-    // TODO: 密码格式限制
 
     if (ifEncrypt) {
       const encrypted = encrypt(data, key);
-      // 上传加密 data
-      fetch('/api/post/codedata/Encrypted', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain'
-        },
-        body: encrypted,
-      })
-      .then(res => {
-        // TODO: alert here
-        if (res.ok) return res.json();
-      })
-      .then(resJson => {
-        dispatch(setID(resJson.id));
-        navigate(`/success?id=${resJson.id}`);
+      submitData('/api/post/codedata/Encrypted', encrypted, {
+        'Content-Type': 'text/plain',
       });
     } else {
-      // 上传非加密 data
-      fetch('/api/post/codedata', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data),
-      })
-      .then(res => {
-        // TODO: alert here
-        if (res.ok) return res.json();
-      })
-      .then(resJson => {
-        dispatch(setID(resJson.id))
-        navigate(`/success?id=${resJson.id}`);
+      submitData('/api/post/codedata', JSON.stringify(data), {
+        'Content-Type': 'application/json',
       });
     }
-  }
+  };
   
   return (
     <ConfigProvider theme={theme}>

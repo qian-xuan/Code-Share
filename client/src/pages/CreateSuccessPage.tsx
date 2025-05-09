@@ -6,7 +6,8 @@ import { ParseMarkdown } from "../utils/MarkdownEditor";
 
 
 const CreateSuccessPage = () => {
-  const settings = store.getState().edit.editPageData.settings;
+  console.log(store.getState().edit);
+  const settings = store.getState().edit.editPageDataCache.settings;
   return (
     <ConfigProvider theme={{components:{Card:{bodyPadding: 0,}}}}>
     <Card className="flex-row rounded-xl p-4 pt-3">
