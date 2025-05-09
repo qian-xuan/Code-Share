@@ -2,6 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CodeData, defaultCodeData, LanguageType } from "../types/CodeData";
 
 const initialState = {
+  id: -1,
+  validated: false,
+  encrypted: false,
   editPageData: defaultCodeData,
   editPageDataCache: defaultCodeData,
 }
@@ -10,6 +13,15 @@ const editPageSlice = createSlice({
   name: 'editPageData',
   initialState,
   reducers: {
+    setID: (state, action: PayloadAction<number>) => {
+      state.id = action.payload;
+    },
+    setValidated: (state, action: PayloadAction<boolean>) => {
+      state.validated = action.payload;
+    },
+    setEncrypted: (state, action: PayloadAction<boolean>) => {
+      state.encrypted = action.payload;
+    },
     seteditPageData: (state, action: PayloadAction<CodeData>) => {
       state.editPageData = action.payload;
     },
@@ -42,6 +54,6 @@ const editPageSlice = createSlice({
     },
   }
 })
-export const { setFCName, seteditPageData, addCode, removeCode, setLanguage,
+export const { setID, setValidated, setEncrypted, setFCName, seteditPageData, addCode, removeCode, setLanguage,
   updateCode, setOvertime, updateCache, setTags, setDescription } = editPageSlice.actions;
 export default editPageSlice.reducer;

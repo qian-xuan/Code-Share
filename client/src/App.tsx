@@ -8,6 +8,7 @@ import { FloatButton } from 'antd'
 import { SunOutlined } from '@ant-design/icons'
 import { useContext } from 'react'
 import { GlobalThemeContext } from './contexts/GlobalThemeContext'
+import CreateSuccessPage from './pages/CreateSuccessPage'
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
             <Route path="/create" element={<EditCodePage key="create" />} />
             <Route path="/codes" element={<CodeListPage />} />
             <Route path="/share" element={<CardSharePage />} />
+            <Route path="/success" element={<CreateSuccessPage />} />
           </Routes>
         </div>
 

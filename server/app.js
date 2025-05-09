@@ -5,7 +5,7 @@ import bodyParser from 'koa-bodyparser';
 import { fileURLToPath } from 'url'
 import path from 'path'
 import fs from 'fs';
-import { Sequelize, DataTypes } from 'sequelize';
+import { Sequelize, DataTypes, json } from 'sequelize';
 
 const hostname = "localhost"
 const post = 3001
@@ -16,20 +16,38 @@ const router = new Router()
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const staticPath = path.join(__dirname, '/dist')
 
-app.use(bodyParser());
+app.use(bodyParser({
+  enableTypes: ['json', 'form', 'text'],
+}));
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',
   storage: './database.sqlite',  // 数据库文件路径
 });
 
-// 定义模型
+// CodeData 模型
 const CodeData = sequelize.define('CodeData', {
   id: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     primaryKey: true,
+    autoIncrement: true,
   },
-  data: DataTypes.JSON,
+  data: {
+    type: DataTypes.JSON,
+    allowNull: false,
+  }
+});
+// 加密数据模型
+const Encrypted = sequelize.define('Encrypted', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  data: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  }
 });
 
 // 同步模型到数据库
@@ -57,10 +75,52 @@ app.use(async (ctx, next) => {
 });
 
 // 注册路由
-router.get('/codedata', async (ctx) => {
+router.get('/api/get/codedata', async (ctx) => {
   try {
-    const users = await CodeData.findAll();
-    ctx.body = users;
+    const id = Number(ctx.query.id); // 获取查询参数 id
+    console.log('Received ID:', id);
+
+    if (id) {
+      // 如果提供了 id 参数，则查询特定记录
+      const user = await CodeData.findByPk(id); // 使用主键查询
+      console.log(user);
+      if (user) {
+        ctx.body = user;
+      } else {
+        ctx.status = 404;
+        ctx.body = { error: 'Record not found' };
+      }
+    } else {
+      // 如果未提供 id 参数，则返回所有记录
+      const users = await CodeData.findAll();
+      ctx.body = users;
+    }
+  } catch (err) {
+    ctx.status = 500;
+    ctx.body = { error: 'Failed to fetch users' };
+  }
+});
+
+router.get('/api/get/codedata/encrypted', async (ctx) => {
+  try {
+    const id = Number(ctx.query.id); // 获取查询参数 id
+    console.log('Received ID:', id);
+
+    if (id) {
+      // 如果提供了 id 参数，则查询特定记录
+      const user = await Encrypted.findByPk(id); // 使用主键查询
+      console.log(user);
+      if (user) {
+        ctx.body = user;
+      } else {
+        ctx.status = 404;
+        ctx.body = { error: 'Record not found' };
+      }
+    } else {
+      // 如果未提供 id 参数，则返回所有记录
+      const users = await CodeData.findAll();
+      ctx.body = users;
+    }
   } catch (err) {
     ctx.status = 500;
     ctx.body = { error: 'Failed to fetch users' };
@@ -69,11 +129,24 @@ router.get('/codedata', async (ctx) => {
 
 router.post('/api/post/codedata', async (ctx) => {
   try {
-    console.log(ctx.request.body)
-    const { id, data } = ctx.request.body;
-    const newUser = await CodeData.create({ id, data });
-    ctx.body = newUser;
+    const data = ctx.request.body;
+    const newCode = await CodeData.create({ data: data });
+    ctx.body = { id: newCode.dataValues.id };
   } catch (err) {
+    console.error('Error creating record:', err);
+    ctx.status = 500;
+    ctx.body = { error: 'Failed to create user' };
+  }
+});
+
+router.post('/api/post/codedata/encrypted', async (ctx) => {
+  try {
+    const encrypted = ctx.request.body;
+    console.log(encrypted)
+    const newCode = await Encrypted.create({ data: encrypted });
+    ctx.body = { id: newCode.dataValues.id, message: 'Record created successfully'};
+  } catch (err) {
+    console.error('Error creating record:', err);
     ctx.status = 500;
     ctx.body = { error: 'Failed to create user' };
   }

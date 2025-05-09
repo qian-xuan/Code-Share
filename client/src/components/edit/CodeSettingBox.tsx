@@ -89,7 +89,6 @@ const CodeSettingBox = () => {
     value.forEach((value) => {
       tags.push(value[0]);
     });
-    console.log(tags)
     dispatch(setTags(tags));
   };
 

@@ -32,8 +32,8 @@ const mdParser = new MarkdownIt({
   },
 });
 
-export const parseMarkdown = (text: string): string => {
-  return mdParser.render(text);
+export const ParseMarkdown = ({text}: {text: string}) => {
+  return <div dangerouslySetInnerHTML={{ __html: mdParser.render(text) }} />;
 }
 
 const MarkdownEditor = () => {

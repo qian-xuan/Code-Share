@@ -10,7 +10,6 @@ export type CodeData = {
     tags: string[],
     overtime: string | undefined,
     description: string,
-    encrypted: boolean,
   }
 };
 
@@ -21,6 +20,5 @@ export const defaultCodeData: CodeData = {
     tags: [],
     overtime: undefined,
     description: '',
-    encrypted: false,
   }
 }

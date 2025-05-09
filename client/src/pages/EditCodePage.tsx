@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import EditCodeBox from '../components/edit/EditCodeBox';
 import CodeSettingBox from '../components/edit/CodeSettingBox';
 import { Button, Collapse, ConfigProvider, Input, Radio, RadioChangeEvent, ThemeConfig } from 'antd';
 import store from '../store/store';
-import { decrypt, encrypt } from '../utils/crypto';
+import { encrypt } from '../utils/crypto';
 import runes from 'runes2';
 import { CloseCircleFilled, ReloadOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
+import { seteditPageData, setEncrypted, setID, setValidated } from '../store/editPageSlice';
+import { useNavigate } from 'react-router-dom';
+import { defaultCodeData } from '../types/CodeData';
 
 const theme:ThemeConfig = {
   components: {
@@ -35,33 +39,60 @@ const randomString = (length: number): string => {
 };
 
 const EditCodePage = () => {
+  useMemo(() => {
+    const validated = store.getState().edit.validated;
+    if (!validated) {
+      const dispatch = useDispatch();
+      dispatch(seteditPageData(defaultCodeData));
+      dispatch(setValidated(true))
+    }
+  }, []);
+
   const [ifEncrypt, setIfEncrypt] = useState(false);
   const [key, setKey] = useState(randomString(6));
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onSubmit = () => {
     const data = store.getState().edit.editPageData;
-    // TODO: 密码格式限制 && data格式校验
+    // TODO: 密码格式限制
+
     if (ifEncrypt) {
-      const e = encrypt(data, key);
-      // TODO: 上传数据库
-      console.log(e);
-      console.log(decrypt(e, key));
-      return;
+      const encrypted = encrypt(data, key);
+      // 上传加密 data
+      fetch('/api/post/codedata/Encrypted', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain'
+        },
+        body: encrypted,
+      })
+      .then(res => {
+        // TODO: alert here
+        if (res.ok) return res.json();
+      })
+      .then(resJson => {
+        dispatch(setID(resJson.id));
+        navigate(`/success?id=${resJson.id}`);
+      });
+    } else {
+      // 上传非加密 data
+      fetch('/api/post/codedata', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+      })
+      .then(res => {
+        // TODO: alert here
+        if (res.ok) return res.json();
+      })
+      .then(resJson => {
+        dispatch(setID(resJson.id))
+        navigate(`/success?id=${resJson.id}`);
+      });
     }
-    // TODO: 上传数据库
-    fetch('/api/post/codedata', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data),
-    })
-    .then(res => {
-      if (res.ok) return res.json;
-    })
-    .then(data => {
-      console.log(data);
-    });
   }
   
   return (
@@ -85,7 +116,10 @@ const EditCodePage = () => {
       <div className='flex-row text-text'>
         <div className='flex justify-between'>
           <Radio.Group defaultValue="public" buttonStyle="solid" size='small' name='encrypt' 
-          onChange={ (e: RadioChangeEvent) => { setIfEncrypt(e.target.value === 'private') } }>
+          onChange={ (e: RadioChangeEvent) => {
+            setIfEncrypt(e.target.value === 'private');
+            dispatch(setEncrypted(e.target.value === 'private'));
+            } }>
             <Radio.Button value="public">公开</Radio.Button>
             <Radio.Button value="private">加密</Radio.Button>
           </Radio.Group>
