@@ -4,7 +4,7 @@ import { LanguageType } from "../types/CodeData";
 const defaultCodesRef: {
   language: LanguageType,
   code: string | undefined,
-}[] = [];
+}[] = [{language: 'html', code: '// 输入代码...'}];
 
 const initialState = {
   page: 0,
@@ -13,8 +13,8 @@ const initialState = {
   codesRef: defaultCodesRef,
 }
 
-const editorSlice = createSlice({
-  name: 'editor',
+const editorSettingsSlice = createSlice({
+  name: 'editorSettings',
   initialState,
   reducers: {
     setPage: (state, action: PayloadAction<number>) => {
@@ -29,7 +29,13 @@ const editorSlice = createSlice({
     setCodesRef: (state, action: PayloadAction<typeof defaultCodesRef>) => {
       state.codesRef = action.payload;
     },
+    updateCodesRef: (state, action: PayloadAction<{ page: number, code: string | undefined }>) => {
+      state.codesRef[action.payload.page].code = action.payload.code;
+    },
+    updateCodesRefLanguage: (state, action: PayloadAction<{ page: number, language: LanguageType }>) => {
+      state.codesRef[action.payload.page].language = action.payload.language;
+    },
   }
 })
-export const { setPage, setForceUpdate, setIfReadOnly, setCodesRef } = editorSlice.actions;
-export default editorSlice.reducer;
+export const { setPage, setForceUpdate, setIfReadOnly, setCodesRef, updateCodesRef, updateCodesRefLanguage } = editorSettingsSlice.actions;
+export default editorSettingsSlice.reducer;

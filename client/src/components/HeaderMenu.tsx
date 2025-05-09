@@ -3,10 +3,11 @@ import { PlusOutlined } from '@ant-design/icons';
 import type { MenuProps, ThemeConfig } from 'antd';
 import { ConfigProvider, Menu } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { DispatchType } from '../store/store';
+import store, { DispatchType } from '../store/store';
 import { useDispatch } from 'react-redux';
-import { seteditPageData } from '../store/editPageSlice';
+import { seteditPageData, setValidated } from '../store/editPageSlice';
 import { defaultCodeData } from '../types/CodeData';
+import { setIfReadOnly } from '../store/editorSettingsSlice';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -53,7 +54,12 @@ const HeaderMenu: React.FC = () => {
   // 点击菜单项时导航到对应路由
   const onClick: MenuProps['onClick'] = (e) => {
     if (e.key === 'create') {
-      dispatch(seteditPageData(defaultCodeData));
+      if (!store.getState().edit.validated) {
+        dispatch(seteditPageData(defaultCodeData));
+        dispatch(setValidated(true))
+      }
+      if (store.getState().editorSettings.ifReadOnly)
+        dispatch(setIfReadOnly(false));
     };
     setSelected(e.key);
     navigate(`/${e.key}`); // 跳转到对应路由

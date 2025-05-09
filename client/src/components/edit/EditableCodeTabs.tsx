@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ConfigProvider, Select, Tabs, ThemeConfig } from 'antd';
 import CodeEditor from '../CodeEditor';
 import { useDispatch } from 'react-redux';
 import store, { DispatchType } from '../../store/store';
-import { addCode, removeCode, setLanguage } from '../../store/editPageSlice';
 import { LanguageType } from '../../types/CodeData';
+import { addCode, removeCode, setLanguage } from '../../store/editPageSlice';
+import { setCodesRef, setPage } from '../../store/editorSettingsSlice';
 
 type TargetKey = React.MouseEvent | React.KeyboardEvent | string;
 
@@ -47,10 +48,12 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
   const [activeKey, setActiveKey] = useState('0');
   const [currentPage, setCurrentPage] = useState(0);
   const [currentLanguage, setCurrentLanguage] = useState<LanguageType>('html');
+  const [ifRefChange, setIfRefChange] = useState(0);
   
-  // 强制更新Editor的内容
-  const [forceUpdate, setForceUpdate] = useState(0);
-  const useForceUpdateEditor = () => setForceUpdate(forceUpdate+1);
+  useEffect(() => {
+    dispatch(setCodesRef(store.getState().edit.editPageData.codes));
+    dispatch(setPage(currentPage));
+  }, [currentPage, ifRefChange]);
 
   // 初始化页面数
   const [tabItemsChange, setTabItemsChange] = useState(false);
@@ -65,6 +68,7 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
         items.push({ label: `代码 ${index + 1}`,  key: index.toString() });
       })
     }
+    setIfRefChange(ifRefChange+1);
     return items;
   }, [tabItemsChange]);
 
@@ -79,6 +83,7 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
     setActiveKey(newPage.toString());
     setCurrentPage(newPage);
     setCurrentLanguage(store.getState().edit.editPageData.codes[newPage].language);
+    setIfRefChange(ifRefChange+1);
   }
 
   // 切换 Page 
@@ -117,7 +122,6 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
     else if (activePage === removePage) {
       // ! 强制更新 Page Language
       tabChangeLogic(activePage);
-      useForceUpdateEditor();
     }
   };
 
@@ -137,6 +141,7 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
   const changeLanguage = (newLanguage: LanguageType) => {
     dispatch(setLanguage({page: currentPage, language: newLanguage}));
     setCurrentLanguage(newLanguage);
+    setIfRefChange(ifRefChange+1);
   }
 
   // TODO: 添加可选语言
@@ -170,13 +175,7 @@ const EditableCodeTabs: React.FC<{ children?: React.ReactNode }> = () => {
         />
       </ConfigProvider>
 
-      <CodeEditor
-      language={currentLanguage}
-      page={currentPage}
-      readOnly={false}
-      key={'sharedEditor'}
-      forceUpdate={forceUpdate}
-      />
+      <CodeEditor key={'sharedEditor'} />
 
     </>
   )

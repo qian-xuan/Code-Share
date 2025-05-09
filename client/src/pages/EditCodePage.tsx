@@ -2,14 +2,14 @@ import { useState } from 'react';
 import EditCodeBox from '../components/edit/EditCodeBox';
 import CodeSettingBox from '../components/edit/CodeSettingBox';
 import { Button, Collapse, ConfigProvider, Input, Radio, RadioChangeEvent, ThemeConfig } from 'antd';
-import store, { StateType } from '../store/store';
+import store from '../store/store';
 import { encrypt } from '../utils/crypto';
 import runes from 'runes2';
 import { CloseCircleFilled, ReloadOutlined } from '@ant-design/icons';
-import { useDispatch, useSelector } from 'react-redux';
-import { seteditPageData, seteditPageDataCache, setEncrypted, setID, setValidated } from '../store/editPageSlice';
+import { useDispatch } from 'react-redux';
+import { setEncrypted, setID, setValidated } from '../store/editPageSlice';
 import { useNavigate } from 'react-router-dom';
-import { defaultCodeData } from '../types/CodeData';
+import { setIfReadOnly } from '../store/editorSettingsSlice';
 
 const theme:ThemeConfig = {
   components: {
@@ -39,14 +39,7 @@ const randomString = (length: number): string => {
 };
 
 const EditCodePage = () => {
-  const validated = useSelector((state: StateType) => state.edit.validated);
   const dispatch = useDispatch();
-  if (!validated) {
-    console.log('here')
-    dispatch(seteditPageData(defaultCodeData));
-    dispatch(setValidated(true))
-  }
-
 
   const [ifEncrypt, setIfEncrypt] = useState(false);
   const [key, setKey] = useState(randomString(6));
@@ -67,8 +60,8 @@ const EditCodePage = () => {
 
       const resJson = await response.json();
       dispatch(setID(resJson.id));
-      dispatch(seteditPageDataCache(store.getState().edit.editPageData))
-      setValidated(false);
+      dispatch(setValidated(false));
+      dispatch(setIfReadOnly(true));
       navigate(`/success?id=${resJson.id}`);
     } catch (error) {
       console.error('Error:', error);

@@ -6,8 +6,19 @@ import { ParseMarkdown } from "../utils/MarkdownEditor";
 
 
 const CreateSuccessPage = () => {
-  console.log(store.getState().edit);
-  const settings = store.getState().edit.editPageDataCache.settings;
+  const settings = store.getState().edit.editPageData.settings;
+
+  // const id = store.getState().edit.id;
+  // fetch(`/api/get/codedata?id=${id}`, {
+  //       method: 'GET',
+  //     })
+  //     .then(res => {
+  //       if (res.ok) return res.json();
+  //     })
+  //     .then(resJson => {
+  //      console.log(resJson);
+  //     });
+  
   return (
     <ConfigProvider theme={{components:{Card:{bodyPadding: 0,}}}}>
     <Card className="flex-row rounded-xl p-4 pt-3">
@@ -32,8 +43,14 @@ const CreateSuccessPage = () => {
       {/* 可编辑代码 tabs */}
       <DisplayCodeTabs />
 
-      <div>
-        test
+      {/* 底边栏 */}
+      <div className="flex justify-between">
+        <div>
+          test
+        </div>
+        <div>
+          过期时间：{settings.overtime}
+        </div>
       </div>
 
     </Card>

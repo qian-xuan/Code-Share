@@ -9,15 +9,18 @@ import { SunOutlined } from '@ant-design/icons'
 import { useContext } from 'react'
 import { GlobalThemeContext } from './contexts/GlobalThemeContext'
 import CreateSuccessPage from './pages/CreateSuccessPage'
+import store from './store/store'
 
 
 function App() {
   const { setThemeMode, themeMode } = useContext(GlobalThemeContext)!;
 
   const toggleTheme = () => {
+    console.log(store.getState().edit.editPageData)
     setThemeMode(themeMode === 'dark' ? 'light' : 'dark');
     // console.log(getComputedStyle(document.documentElement).getPropertyValue('--color-pageBg').trim());
   };
+
 
   return (
     <div className='flex justify-around min-h-screen'>
@@ -30,7 +33,7 @@ function App() {
         <div className="w-9/12 pt-5">
           <Routes>
             <Route path="/" element={<Navigate to ="/codes" />} />
-            <Route path="/create" element={<EditCodePage key="create" />} />
+            <Route path="/create" element={<EditCodePage />} />
             <Route path="/codes" element={<CodeListPage />} />
             <Route path="/share" element={<CardSharePage />} />
             <Route path="/success" element={<CreateSuccessPage />} />

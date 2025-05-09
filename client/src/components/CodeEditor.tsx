@@ -1,87 +1,72 @@
 import { Editor, useMonaco } from '@monaco-editor/react';
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DispatchType, StateType } from '../store/store';
 import { updateCode } from '../store/editPageSlice';
+import { updateCodesRef } from '../store/editorSettingsSlice';
 
-interface CodeEditorProps {
-  language?: string,
-  page: number,
-  readOnly: boolean,
-  forceUpdate?: Number
-};
+// interface CodeEditorProps {
+//   language?: string,
+//   page: number,
+//   readOnly: boolean,
+//   forceUpdate?: Number
+// };
 
-console.log('create editor')
 
-const CodeEditor: React.FC<CodeEditorProps> = ({ language = 'html', page, readOnly, forceUpdate }) => {
-  console.log('update editor')
+const CodeEditor = () => {
   const editorRef = useRef<any>(null); // 引用 Editor 实例
-  // const codes = useContext(CodeDataContext).codes;
   const monaco = useMonaco();
 
-  const codes = useSelector((state: StateType) => state.edit.editPageData.codes);
   const dispatch: DispatchType = useDispatch();
+  const page = useSelector((state: StateType) => state.editorSettings.page);
+  const codesRef = useSelector((state: StateType) => state.editorSettings.codesRef);
+  const ifReadOnly = useSelector((state: StateType) => state.editorSettings.ifReadOnly);
+  const forceUpdate = useSelector((state: StateType) => state.editorSettings.forceUpdate);
 
   // 获取编辑器实例
   const handleEditorDidMount = (editor: any) => {
     editorRef.current = editor; // 保存 Editor 实例
-    // console.log('here')
   };
 
-  if ( !readOnly ) {
-    // 修改编辑器内容
-    useEffect(() => {
-      if ( editorRef.current !== null ) { 
-        // console.log(editorRef.current)
-        // console.log(editorRef.current.getValue());
-        editorRef.current.setValue(codes[page].code);
-      }
-    }, [page, forceUpdate]);
+  const setEditorValue = () => {
+    if ( editorRef.current === null ) return;
+    // console.log(editorRef.current)
+    // console.log(editorRef.current.getValue());
+    editorRef.current.setValue(codesRef[page].code);
+  };
 
-    // 修改编辑器语言
-    useEffect(() => {
-      if (editorRef.current) {
-        const model = editorRef.current.getModel();
-        if (model && monaco) {
-          monaco.editor.setModelLanguage(model, language); // 动态设置语言
-          // console.log(language);
-        }
-      }
-    }, [language]);
-  }
-  else {
-    useEffect(() => {
-      if ( editorRef.current !== null ) { 
-        editorRef.current.setValue(codes[page].code);
+  const setEditorLanguage = () => {
+    if (editorRef.current === null) return;
+    const model = editorRef.current.getModel();
+    if (model && monaco) {
+      monaco.editor.setModelLanguage(model, codesRef[page].language);
+    }
+  };
 
-        const model = editorRef.current.getModel();
-        if (model && monaco) {
-          monaco.editor.setModelLanguage(model, codes[page].language);
-          // console.log(language);
-        }
-      }
-    }, [page]);
-  }
+  // ref 变动时更新 editor
+  useEffect(() => {
+    setEditorValue();
+    setEditorLanguage();
+  }, [page, codesRef, forceUpdate]);
 
   // 编辑器内容变更
   const onchange = (value: string | undefined) => {
+    dispatch(updateCodesRef({page: page, code: value}));
     dispatch(updateCode({page: page, code: value}));
-    // console.log(page)
-    // console.log(codes)
   }
 
   return (
     <Editor
     // defaultLanguage="html"
     theme="vs-dark"  // 主题：vs, vs-dark, hc-black
-    language={language}
-    defaultValue={codes[page].code}
+    language={codesRef[page].language}
+    defaultValue={codesRef[page].code}
     onChange={onchange}
     onMount={handleEditorDidMount}
     options={{
       minimap: { enabled: false },  // 禁用小地图
       mouseWheelZoom: true,         // 滚轮缩放
-      readOnly: readOnly,
+      readOnly: ifReadOnly,
       folding: true,
       smoothScrolling: true,
       scrollbar: {vertical: "hidden"},

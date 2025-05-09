@@ -2,7 +2,8 @@ import React, { useMemo, useState } from 'react';
 import store from '../store/store';
 import { ConfigProvider, Tabs, ThemeConfig } from 'antd';
 import CodeEditor from './CodeEditor';
-import { LanguageType } from '../types/CodeData';
+import { setPage } from '../store/editorSettingsSlice';
+import { useDispatch } from 'react-redux';
 
 
 const theme:ThemeConfig = {
@@ -24,24 +25,10 @@ interface TabItem {
 }
 
 const DisplayCodeTabs: React.FC = () => {
-  // const data = store.getState().edit.editPageData;
-  const id = store.getState().edit.id;
-  fetch(`/api/get/codedata?id=${id}`, {
-        method: 'GET',
-      })
-      .then(res => {
-        if (res.ok) return res.json();
-      })
-      .then(resJson => {
-       console.log(resJson);
-      });
-
+  const dispatch = useDispatch();
   const [activeKey, setActiveKey] = useState('0');
-  const [currentPage, setCurrentPage] = useState(0);
-  const [currentLanguage, setCurrentLanguage] = useState<LanguageType>('html');
+  const codes = store.getState().edit.editPageData.codes;
   
-  // 强制更新Editor的内容
-  const [forceUpdate, setForceUpdate] = useState(0);
   // const useForceUpdateEditor = () => setForceUpdate(forceUpdate+1);
 
   // 初始化页面数
@@ -58,8 +45,7 @@ const DisplayCodeTabs: React.FC = () => {
   const tabChangeLogic:any = (value: number | string) => {
     const newPage = Number(value);
     setActiveKey(newPage.toString());
-    setCurrentPage(newPage);
-    setCurrentLanguage(store.getState().edit.editPageData.codes[newPage].language);
+    dispatch(setPage(newPage));
   }
 
   // 切换 Page 
@@ -69,7 +55,9 @@ const DisplayCodeTabs: React.FC = () => {
 
   // Tabs 边栏 label
   const operations = (
-    <label>Test</label>
+    <div className='pr-3 text-[15px]' >
+      <label>{codes[Number(activeKey)].language}</label>
+    </div>
   );
 
   return (
@@ -86,13 +74,7 @@ const DisplayCodeTabs: React.FC = () => {
         />
       </ConfigProvider>
 
-      <CodeEditor
-      language={currentLanguage}
-      page={currentPage}
-      readOnly={true}
-      key={'CodeDisplayer'}
-      forceUpdate={forceUpdate}
-      />
+      <CodeEditor />
 
     </>
   );

@@ -6,7 +6,7 @@ const initialState = {
   validated: false,
   encrypted: false,
   editPageData: defaultCodeData,
-  editPageDataCache: defaultCodeData,
+  // editPageDataCache: defaultCodeData,
 }
 
 const editPageSlice = createSlice({
@@ -24,9 +24,6 @@ const editPageSlice = createSlice({
     },
     seteditPageData: (state, action: PayloadAction<CodeData>) => {
       state.editPageData = action.payload;
-    },
-    seteditPageDataCache: (state, action: PayloadAction<CodeData>) => {
-      state.editPageDataCache = action.payload;
     },
     setFCName: (state, action: PayloadAction<string>) => {
       state.editPageData.settings.title = action.payload;
@@ -52,11 +49,14 @@ const editPageSlice = createSlice({
     updateCode: (state, action: PayloadAction<{ page: number, code: string | undefined }>) => {
       state.editPageData.codes[action.payload.page].code = action.payload.code;
     },
-    updateCache: (state) => {
-      state.editPageDataCache = state.editPageData;
-    },
+    // seteditPageDataCache: (state, action: PayloadAction<CodeData>) => {
+    //   state.editPageDataCache = action.payload;
+    // },
+    // updateCache: (state) => {
+    //   state.editPageDataCache = state.editPageData;
+    // },
   }
 })
-export const { setID, setValidated, setEncrypted, setFCName, seteditPageData, seteditPageDataCache, addCode, removeCode, setLanguage,
-  updateCode, setOvertime, updateCache, setTags, setDescription } = editPageSlice.actions;
+export const { setID, setValidated, setEncrypted, setFCName, seteditPageData, addCode, removeCode, setLanguage,
+  updateCode, setOvertime, setTags, setDescription } = editPageSlice.actions;
 export default editPageSlice.reducer;
