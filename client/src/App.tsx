@@ -34,6 +34,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Navigate to ="/codes" />} />
             <Route path="/create" element={<EditCodePage />} />
+            <Route path="/edit" element={<EditCodePage />} />
             <Route path="/codes" element={<CodeListPage />} />
             <Route path="/share" element={<CardSharePage />} />
             <Route path="/success" element={<CreateSuccessPage />} />

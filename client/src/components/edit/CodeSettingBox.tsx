@@ -4,7 +4,7 @@ import { CloseCircleFilled } from '@ant-design/icons';
 import dayjs from "dayjs";
 import { runes } from 'runes2';
 import { useDispatch, useSelector } from "react-redux";
-import { DispatchType, StateType } from "../../store/store";
+import store, { DispatchType, StateType } from "../../store/store";
 import { setFCName, setOvertime, setTags } from "../../store/editPageSlice";
 import { CascaderProps } from "rc-cascader";
 import MarkdownEditor from '../../utils/MarkdownEditor.tsx'
@@ -59,16 +59,32 @@ interface TagOption {
 
 const tagOptions: TagOption[] = [
   {
-    label: 'html',
-    value: 'html',
+    label: 'HTML',
+    value: 'HTML',
   },
   {
-    label: 'javascript',
-    value: 'javascript',
+    label: 'JavaScript',
+    value: 'JavaScript',
+  },
+  {
+    label: 'Python',
+    value: 'Python',
   },
   {
     label: '作业',
     value: '作业',
+  },
+  {
+    label: '设计模式',
+    value: '设计模式',
+  },
+  {
+    value: 'C++',
+    label: 'C++',
+  },
+  {
+    value: 'Go',
+    label: 'Go',
   },
 ];
 
@@ -151,11 +167,13 @@ const CodeSettingBox = () => {
           maxTagCount="responsive"
           showSearch={{}}
           // showCheckedStrategy={}
-          // defaultValue={[
-          //   ['bamboo', 'little', 'fish'],
-          //   ['bamboo', 'little', 'cards'],
-          //   ['bamboo', 'little', 'bird'],
-          // ]}
+          defaultValue={(() => {
+                      const defaultTags: (string | number)[][] = [];
+                      store.getState().edit.editPageData.settings.tags.forEach((tag: string) => {
+                        defaultTags.push([tag]);
+                      });
+                      return defaultTags;
+                    })()}
           />
         </div>
         {/* 过期时间 */}

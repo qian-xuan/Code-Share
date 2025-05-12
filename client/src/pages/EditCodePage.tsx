@@ -7,9 +7,9 @@ import { encrypt } from '../utils/crypto';
 import runes from 'runes2';
 import { CloseCircleFilled, ReloadOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
-import { setEncrypted, setID, setValidated } from '../store/editPageSlice';
+import { setCreatedAt, setEncrypted, setID, setValidated } from '../store/editPageSlice';
 import { useNavigate } from 'react-router-dom';
-import { setIfReadOnly } from '../store/editorSettingsSlice';
+import { setIfReadOnly, setPage } from '../store/editorSettingsSlice';
 
 const theme:ThemeConfig = {
   components: {
@@ -45,6 +45,7 @@ const EditCodePage = () => {
   const [key, setKey] = useState(randomString(6));
   const navigate = useNavigate();
 
+  // TODO: 判断id合法性，决定更新或新建提交
   // 通用的提交函数
   const submitData = async (url: string, body: any, headers: HeadersInit) => {
     try {
@@ -59,9 +60,12 @@ const EditCodePage = () => {
       }
 
       const resJson = await response.json();
+      console.log(resJson)
       dispatch(setID(resJson.id));
+      dispatch(setCreatedAt(resJson.createdAt));
       dispatch(setValidated(false));
       dispatch(setIfReadOnly(true));
+      dispatch(setPage(0));
       navigate(`/success?id=${resJson.id}`);
     } catch (error) {
       console.error('Error:', error);

@@ -116,10 +116,6 @@ router.get('/api/get/codedata/encrypted', async (ctx) => {
         ctx.status = 404;
         ctx.body = { error: 'Record not found' };
       }
-    } else {
-      // 如果未提供 id 参数，则返回所有记录
-      const users = await CodeData.findAll();
-      ctx.body = users;
     }
   } catch (err) {
     ctx.status = 500;
@@ -131,7 +127,8 @@ router.post('/api/post/codedata', async (ctx) => {
   try {
     const data = ctx.request.body;
     const newCode = await CodeData.create({ data: data });
-    ctx.body = { id: newCode.dataValues.id };
+    // console.log(newCode)
+    ctx.body = { id: newCode.dataValues.id, createdAt: newCode.dataValues.createdAt };
   } catch (err) {
     console.error('Error creating record:', err);
     ctx.status = 500;

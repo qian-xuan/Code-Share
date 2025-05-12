@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import store from '../store/store';
-import { ConfigProvider, Tabs, ThemeConfig } from 'antd';
+import { Button, ConfigProvider, Tabs, Tag, ThemeConfig } from 'antd';
 import CodeEditor from './CodeEditor';
 import { setPage } from '../store/editorSettingsSlice';
 import { useDispatch } from 'react-redux';
+import { CopyFilled } from '@ant-design/icons'
 
 
 const theme:ThemeConfig = {
@@ -55,9 +56,22 @@ const DisplayCodeTabs: React.FC = () => {
 
   // Tabs 边栏 label
   const operations = (
-    <div className='pr-3 text-[15px]' >
-      <label>{codes[Number(activeKey)].language}</label>
-    </div>
+    <>
+      <Tag bordered={false}>{codes[Number(activeKey)].language}</Tag>
+      <Button shape='circle' size='small' icon={<CopyFilled />}
+      onClick={() => {
+        const code = store.getState().edit.editPageData
+        .codes[store.getState().editorSettings.page].code;
+        navigator.clipboard.writeText(code!)
+        .then(() => {
+          alert('代码已复制到剪贴板');
+        })
+        .catch((err) => {
+          alert('复制失败:' + err);
+        });
+      }}
+      />
+    </>
   );
 
   return (
