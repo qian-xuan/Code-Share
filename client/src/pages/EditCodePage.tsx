@@ -66,7 +66,8 @@ const EditCodePage = () => {
       dispatch(setValidated(false));
       dispatch(setIfReadOnly(true));
       dispatch(setPage(0));
-      navigate(`/success?id=${resJson.id}`);
+      if (ifEncrypt) navigate(`/success?id=${resJson.id}&pwd=${key}`);
+      else  navigate(`/success?id=${resJson.id}`);
     } catch (error) {
       console.error('Error:', error);
       alert(error || '提交失败');

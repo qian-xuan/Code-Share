@@ -57,7 +57,7 @@ sequelize.sync();
 app.use(serve(staticPath));
 
 // 交由前端 Routes 处理的页面
-const frontRoutes = ['/create', '/codes', '/share']
+const frontRoutes = ['/create', 'edit', '/codes', '/share', '/display']
 app.use(async (ctx, next) => {
   await next();
   const pathname = ctx.URL.pathname;
@@ -132,7 +132,7 @@ router.post('/api/post/codedata', async (ctx) => {
   } catch (err) {
     console.error('Error creating record:', err);
     ctx.status = 500;
-    ctx.body = { error: 'Failed to create user' };
+    ctx.body = { error: 'Failed to create' };
   }
 });
 
@@ -141,11 +141,11 @@ router.post('/api/post/codedata/encrypted', async (ctx) => {
     const encrypted = ctx.request.body;
     console.log(encrypted)
     const newCode = await Encrypted.create({ data: encrypted });
-    ctx.body = { id: newCode.dataValues.id, message: 'Record created successfully'};
+    ctx.body = { id: newCode.dataValues.id, createdAt: newCode.dataValues.createdAt };
   } catch (err) {
     console.error('Error creating record:', err);
     ctx.status = 500;
-    ctx.body = { error: 'Failed to create user' };
+    ctx.body = { error: 'Failed to create' };
   }
 });
 

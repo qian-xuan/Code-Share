@@ -1,24 +1,29 @@
-import React from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { DispatchType, StateType } from "../store/store";
+import { useEffect } from "react";
+import { fetchCodeDatas } from "../store/codeDatasSlice";
 
 const CodeListPage: React.FC = () => {
-  // const id = store.getState().edit.id;
-  // TODO: bug
-  let datas;
-  fetch('/api/get/codedata', {
-        method: 'GET',
-      })
-      .then(res => {
-        if (res.ok) return res.json();
-      })
-      .then(resJson => {
-       datas = resJson;
-      });
+  const dispatch = useDispatch<DispatchType>();
+  const { codedatas, loading, error } = useSelector((state: StateType) => state.codeDatas);
 
-  console.log(datas)
-  
+  useEffect(() => {
+    dispatch(fetchCodeDatas());
+  }, [dispatch]);
+
+  if (loading) {
+    return <div>加载中...</div>;
+  }
+
+  if (error) {
+    return <div>错误: {error}</div>;
+  }
+
+  // console.log(codedatas);
+
   return (
     <>
-      <h1>{datas}</h1>
+      {/* <h1>{datas}</h1> */}
     </>
   );
 }
