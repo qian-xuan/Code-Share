@@ -10,7 +10,6 @@ import { useContext } from 'react'
 import { GlobalThemeContext } from './contexts/GlobalThemeContext'
 import CreateSuccessPage from './pages/CreateSuccessPage'
 import store from './store/store'
-import DisplayCodePage from './pages/DisplayCodePage'
 
 
 function App() {
@@ -25,7 +24,7 @@ function App() {
 
   return (
     <div className='flex justify-around min-h-screen'>
-      <div id="app" className='justify-items-center text-text pt-[2rem] pb-[2rem] w-full min-w-[1080px] max-w-[1280px]'>
+      <div id="app" className='justify-items-center text-text pt-[2rem] pb-[2rem] w-full min-w-[1080px] max-w-[1560px]'>
         
         {/* 顶部菜单 */}
         <HeaderMenu />
@@ -39,7 +38,7 @@ function App() {
             <Route path="/codes" element={<CodeListPage />} />
             <Route path="/share" element={<CardSharePage />} />
             <Route path="/success" element={<CreateSuccessPage />} />
-            <Route path="/display" element={<DisplayCodePage />} />
+            <Route path="/display" element={<EditCodePage />} />
           </Routes>
         </div>
 

@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { setCreatedAt, setEncrypted, setID, setValidated } from '../store/editPageSlice';
 import { useNavigate } from 'react-router-dom';
 import { setIfReadOnly, setPage } from '../store/editorSettingsSlice';
+import { CodeData } from '../types/CodeData';
 
 const theme:ThemeConfig = {
   components: {
@@ -25,6 +26,19 @@ const theme:ThemeConfig = {
       
     }
   },
+}
+
+const validationCheck = (codedata: CodeData) => {
+  if (codedata.settings.title === '') {
+    alert('标题不能为空');
+    return false;
+  }
+  if (codedata.settings.description === '') {
+    alert('请添加描述');
+    return false;
+  }
+
+  return true;
 }
 
 const randomString = (length: number): string => {
@@ -49,6 +63,14 @@ const EditCodePage = () => {
   // 通用的提交函数
   const submitData = async (url: string, body: any, headers: HeadersInit) => {
     try {
+      // 批量添加 测试用
+      // for (let i = 0; i < 10; i++) 
+      //   fetch(url, {
+      //   method: 'POST',
+      //   headers,
+      //   body,
+      //   })
+
       const response = await fetch(url, {
         method: 'POST',
         headers,
@@ -76,6 +98,8 @@ const EditCodePage = () => {
 
   const onSubmit = () => {
     const data = store.getState().edit.editPageData;
+
+    if (!validationCheck(data)) return;
 
     if (ifEncrypt) {
       const encrypted = encrypt(data, key);

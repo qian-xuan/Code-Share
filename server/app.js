@@ -83,14 +83,20 @@ router.get('/api/get/codedata', async (ctx) => {
     if (id) {
       // 如果提供了 id 参数，则查询特定记录
       const user = await CodeData.findByPk(id); // 使用主键查询
-      console.log(user);
       if (user) {
-        ctx.body = user;
+        ctx.body = {
+          // 返回数据模型
+          codedata: user.dataValues.data,
+          id: user.dataValues.id,
+          encrypted: false,
+          createdAt: user.dataValues.createdAt,
+        };
       } else {
         ctx.status = 404;
         ctx.body = { error: 'Record not found' };
       }
     } else {
+      // TODO: 统一逻辑至↑
       // 如果未提供 id 参数，则返回所有记录
       const users = await CodeData.findAll();
       ctx.body = users;
