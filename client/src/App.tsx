@@ -10,6 +10,7 @@ import { useContext } from 'react'
 import { GlobalThemeContext } from './contexts/GlobalThemeContext'
 import CreateSuccessPage from './pages/CreateSuccessPage'
 import store from './store/store'
+import DisplayCodePage from './pages/DisplayCodePage'
 
 
 function App() {
@@ -38,7 +39,7 @@ function App() {
             <Route path="/codes" element={<CodeListPage />} />
             <Route path="/share" element={<CardSharePage />} />
             <Route path="/success" element={<CreateSuccessPage />} />
-            <Route path="/display" element={<EditCodePage />} />
+            <Route path="/display" element={<DisplayCodePage />} />
           </Routes>
         </div>
 

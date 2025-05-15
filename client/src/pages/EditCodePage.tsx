@@ -86,6 +86,7 @@ const EditCodePage = () => {
       dispatch(setID(resJson.id));
       dispatch(setCreatedAt(resJson.createdAt));
       dispatch(setValidated(false));
+      
       dispatch(setIfReadOnly(true));
       dispatch(setPage(0));
       if (ifEncrypt) navigate(`/success?id=${resJson.id}&pwd=${key}`);
