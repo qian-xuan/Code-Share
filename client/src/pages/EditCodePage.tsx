@@ -11,6 +11,7 @@ import { setCreatedAt, setEncrypted, setID, setValidated } from '../store/editPa
 import { useNavigate } from 'react-router-dom';
 import { setIfReadOnly, setPage } from '../store/editorSettingsSlice';
 import { CodeData } from '../types/CodeData';
+import { formatDate } from '../utils/utils';
 
 const theme:ThemeConfig = {
   components: {
@@ -84,9 +85,9 @@ const EditCodePage = () => {
       const resJson = await response.json();
       console.log(resJson)
       dispatch(setID(resJson.id));
-      dispatch(setCreatedAt(resJson.createdAt));
+      dispatch(setCreatedAt(formatDate(resJson.createdAt)));
       dispatch(setValidated(false));
-      
+
       dispatch(setIfReadOnly(true));
       dispatch(setPage(0));
       if (ifEncrypt) navigate(`/success?id=${resJson.id}&pwd=${key}`);

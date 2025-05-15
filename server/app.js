@@ -117,7 +117,13 @@ router.get('/api/get/codedata/encrypted', async (ctx) => {
       const user = await Encrypted.findByPk(id); // 使用主键查询
       console.log(user);
       if (user) {
-        ctx.body = user;
+        ctx.body = {
+          // 返回数据模型
+          codedata: user.dataValues.data,
+          id: user.dataValues.id,
+          encrypted: true,
+          createdAt: user.dataValues.createdAt,
+        };
       } else {
         ctx.status = 404;
         ctx.body = { error: 'Record not found' };

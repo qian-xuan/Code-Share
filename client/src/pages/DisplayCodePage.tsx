@@ -1,21 +1,24 @@
 import { useState } from "react";
-import { DataModel } from "../types/DataModel";
+import { DataModel, defaultDataModel } from "../types/DataModel";
 import { DispatchType } from "../store/store";
 import { useDispatch } from "react-redux";
-import { setIfReadOnly, setPage } from "../store/editorSettingsSlice";
+import { setCodesRef, setIfReadOnly, setPage } from "../store/editorSettingsSlice";
 import { setID, setCreatedAt, setValidated, seteditPageData, setEncrypted } from "../store/editPageSlice";
 import CreateSuccessPage from "./CreateSuccessPage";
+import { formatDate } from "../utils/utils";
+import { decrypt } from "../utils/crypto";
 
 const DisplayCodePage = () => {
   const queryParams = new URLSearchParams(window.location.search);
   const dispatch: DispatchType = useDispatch();
+  const encrypted = queryParams.get('pwd') !== null;
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   let fetchURL = '/api/get/codedata';
-  if (queryParams.get('pwd')) fetchURL += '/encrypted';
-  fetchURL += window.location.search;
+  if ( encrypted ) fetchURL += '/encrypted';
+  fetchURL += `?id=${queryParams.get('id')}`;
     
   fetch(fetchURL, { method: 'GET' })
   .then(res => {
@@ -23,14 +26,20 @@ const DisplayCodePage = () => {
     return res.json();
   })
   .then(resJson => {
-    const data: DataModel = {...resJson};
+    let data: DataModel = defaultDataModel;
+    if (encrypted) {
+      data = { ...resJson, codedata: decrypt(resJson.codedata, queryParams.get('pwd')!) };
+    } else {
+      data = {...resJson}
+    }
     
     dispatch(seteditPageData(data.codedata));
     dispatch(setID(data.id));
-    dispatch(setCreatedAt(data.createdAt));
+    dispatch(setCreatedAt(formatDate(data.createdAt)));
     dispatch(setValidated(false)); 
-    dispatch(setEncrypted(data.encrypted)); 
+    dispatch(setEncrypted(encrypted));
 
+    dispatch(setCodesRef(data.codedata.codes));
     dispatch(setIfReadOnly(true));
     dispatch(setPage(0));
     

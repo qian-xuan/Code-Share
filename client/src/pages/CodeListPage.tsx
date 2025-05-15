@@ -57,7 +57,7 @@ const CodeListPage: React.FC = () => {
                   })}
               </Card>
               <div className="flex justify-between">
-                <Tags tags={data.codedata.settings.tags} />
+                <div><Tags tags={data.codedata.settings.tags} /></div>
                 
               </div>
             </div>
